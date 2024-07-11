@@ -10,6 +10,7 @@ public class Community extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community);
+
         //버튼 작동코드들
 
         findViewById(R.id.map).setOnClickListener(v -> {
