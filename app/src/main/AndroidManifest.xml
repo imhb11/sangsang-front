@@ -33,6 +33,10 @@
         </activity>
         <activity android:name=".Register" />
         <activity android:name=".MainActivity" />
+
+        <!-- 추가된 게시판 액티비티들 -->
+        <activity android:name=".MessageBoard" />
+        <activity android:name=".AddMessageBoard" />
     </application>
 
 </manifest>
