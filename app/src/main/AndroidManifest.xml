@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,9 +17,11 @@
         android:theme="@style/Theme.YouLiveAlone"
         tools:targetApi="31">
         <activity android:name=".SettingActivity" />
+        <activity android:name=".community_category" />
         <activity android:name=".Community" />
         <activity android:name=".Honeytip" />
         <activity android:name=".Meeting" />
+        <activity android:name=".MessageBoard" />
         <activity android:name=".Purchase" />
         <activity android:name=".Recycle" />
         <activity android:name=".Smart" />
@@ -32,6 +38,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
