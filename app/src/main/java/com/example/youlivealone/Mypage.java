@@ -50,5 +50,30 @@ public class Mypage extends AppCompatActivity {
             Intent intent = new Intent(Mypage.this, NotificationSettingsActivity.class);
             startActivity(intent);
         });
+
+        // 메뉴 아이템 클릭 리스너 추가
+        findViewById(R.id.menu_item_1).setOnClickListener(v -> {
+            // 예를 들어, 구매목록으로 이동
+            Intent intent = new Intent(Mypage.this, PurchaseActivity.class);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.menu_item_2).setOnClickListener(v -> {
+            // 소속 집단으로 이동
+            Intent intent = new Intent(Mypage.this, GroupActivity.class);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.menu_item_3).setOnClickListener(v -> {
+            // 커뮤니티 기록으로 이동
+            Intent intent = new Intent(Mypage.this, CommunityActivity.class);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.menu_item_4).setOnClickListener(v -> {
+            // 작성 후기 목록으로 이동
+            Intent intent = new Intent(Mypage.this, ReviewActivity.class);
+            startActivity(intent);
+        });
     }
 }
