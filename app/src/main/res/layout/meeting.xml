@@ -5,14 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="meeting"
-        tools:layout_editor_absoluteX="175dp"
-        tools:layout_editor_absoluteY="106dp" />
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="418dp"
@@ -21,7 +13,6 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         tools:layout_editor_absoluteX="-4dp" />
 
@@ -83,4 +74,196 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/materialToolbar"
         app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="301dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/mapsearch"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="0.375"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="56dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="28dp"
+        android:text="소모임"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.051"
+        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/categorybutton"
+        android:layout_width="104dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/meeting_category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.081"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gathering_category"
+        android:layout_width="378dp"
+        android:layout_height="268dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="10dp"
+        app:columnCount="3"
+        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.781"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categorybutton"
+        app:layout_constraintVertical_bias="0.062"
+        app:rowCount="2">
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="159dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toEndOf="@+id/imageButton2"
+            app:layout_constraintTop_toTopOf="@+id/imageButton2"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toEndOf="@+id/imageButton3"
+            app:layout_constraintTop_toTopOf="@+id/imageButton3"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton5"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton6"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="281dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton7"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="258dp" />
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gathering_town"
+        android:layout_width="378dp"
+        android:layout_height="268dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        app:columnCount="3"
+        android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.657"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        app:layout_constraintVertical_bias="0.723"
+        app:rowCount="2">
+
+        <ImageButton
+            android:id="@+id/imageButton8"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="159dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton9"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toEndOf="@+id/imageButton2"
+            app:layout_constraintTop_toTopOf="@+id/imageButton2"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton10"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:layout_constraintStart_toEndOf="@+id/imageButton3"
+            app:layout_constraintTop_toTopOf="@+id/imageButton3"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton11"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <ImageButton
+            android:id="@+id/imageButton12"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="281dp" />
+
+        <ImageButton
+            android:id="@+id/imageButton13"
+            android:layout_width="126dp"
+            android:layout_height="134dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:layout_editor_absoluteY="258dp" />
+    </androidx.gridlayout.widget.GridLayout>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.636"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageButton
+        android:id="@+id/textView13"
+        android:layout_width="84dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="296dp"
+        android:background="@drawable/meeting_neighborhood"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categorybutton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
