@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.YouLiveAlone"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity android:name=".SettingActivity" />
         <activity android:name=".community_category" />
@@ -30,21 +27,15 @@
         <activity android:name=".Check" />
         <activity android:name=".Chat" />
         <activity android:name=".Mypage" />
-        <activity android:name=".Meeting_category" />
-        <activity android:name=".Meeting_detail" />
-        <activity android:name=".Meeting_write" />
-
-
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".Login"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
+        <activity android:name=".Register" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
