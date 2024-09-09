@@ -7,6 +7,7 @@ pluginManagement {
                 includeGroupByRegex("androidx.*")
             }
         }
+        jcenter()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -16,6 +17,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://repository.map.naver.com/archive/maven'
+        }
     }
 }
 

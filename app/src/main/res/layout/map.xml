@@ -4,83 +4,184 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/textView9"
+    <!--지도 불러오기 -->
+    <com.naver.maps.map.MapView
+        android:id="@+id/map_fragment"
+        android:name="com.naver.maps.map.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:navermap_locationButtonEnabled="true"
+        app:navermap_tiltGesturesEnabled="false"
+        tools:layout_editor_absoluteX="13dp" />
+<!--버튼 위치-->
+    <com.naver.maps.map.widget.LocationButtonView
+        android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="map"
-        tools:layout_editor_absoluteX="171dp"
-        tools:layout_editor_absoluteY="139dp" />
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"
+        app:layout_constraintTop_toTopOf="@id/zoom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.naver.maps.map.widget.ZoomControlView
+        android:id="@+id/zoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--카테고리-->
+    <HorizontalScrollView
+        android:id="@+id/categoryScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="8dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="@+id/categoryScrollView"
+            tools:layout_editor_absoluteX="17dp">
+
+            <!--android:drawableTop="@drawable/restaurant_icon"-->
+
+            <ImageButton
+                android:id="@+id/btngathering"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/mapgathering"
+                android:scaleType="fitCenter"
+                android:text="소모임" />
+
+            <ImageButton
+                android:id="@+id/btnRestaurant"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/maprestaurant"
+                android:scaleType="fitCenter"
+                android:text="식당" />
+            <!--android:drawableTop="@drawable/cafe_icon"-->
+
+            <ImageButton
+                android:id="@+id/btnCafe"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/mapcafe"
+                android:scaleType="fitCenter"
+                android:text="카페" />
+            <!--android:drawableTop="@drawable/convenience_icon"-->
+            <ImageButton
+                android:id="@+id/btnConvenience"
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/mapconvenience"
+                android:scaleType="fitCenter"
+                android:text="편의점" />
+
+            <!-- 추가 버튼들을 여기에 계속 추가할 수 있습니다 -->
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!--검색-->
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="375dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:background="@drawable/mapsearch"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--툴바-->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="418dp"
-        android:layout_height="72dp"
+        android:layout_height="60dp"
         android:background="#DEE2E6"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="-4dp" />
+        app:layout_constraintVertical_bias="1.0" />
 
 
     <ImageButton
         android:id="@+id/map"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="20dp"
+        android:layout_width="58dp"
+        android:layout_height="55dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/map"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toStartOf="@+id/check"
-        app:layout_constraintHorizontal_bias="0.053"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar"
-        app:layout_constraintVertical_bias="0.583" />
-
-    <ImageButton
-        android:id="@+id/check"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/check"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/home"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar"
-        app:layout_constraintVertical_bias="0.583" />
+        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/home"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_width="58dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/home"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/chat"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintEnd_toStartOf="@+id/chat" />
 
     <ImageButton
         android:id="@+id/chat"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_width="58dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/chat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mypage"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintEnd_toStartOf="@+id/mypage" />
 
     <ImageButton
         android:id="@+id/mypage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
+        android:layout_width="58dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/mypage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/materialToolbar"
-        app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/check"
+        android:layout_width="58dp"
+        android:layout_height="55dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/check"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
+        app:layout_constraintEnd_toStartOf="@+id/home" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
