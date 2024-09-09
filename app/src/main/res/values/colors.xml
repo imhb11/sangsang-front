@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_dark">#757575</color> <!-- 어두운 회색 텍스트 색상 -->
+    <color name="divider_color">#BDBDBD</color> <!-- 구분선 색상 -->
 </resources>
