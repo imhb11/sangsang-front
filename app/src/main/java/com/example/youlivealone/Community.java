@@ -9,6 +9,9 @@ import androidx.gridlayout.widget.GridLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import java.util.List;
+import com.example.youlivealone.RoomViewModel;
+
+
 
 public class Community extends AppCompatActivity {
     private RoomViewModel roomViewModel;

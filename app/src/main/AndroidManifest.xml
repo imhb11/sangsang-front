@@ -30,6 +30,8 @@
         <activity android:name=".Check" />
         <activity android:name=".Chat" />
         <activity android:name=".Mypage" />
+        <activity android:name=".AccountSettingsActivity" />
+        <activity android:name=".NotificationSettingsActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
