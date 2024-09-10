@@ -1,20 +1,14 @@
 package com.example.youlivealone;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.Volley;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Login extends AppCompatActivity {
     EditText ID, Password;
@@ -24,8 +18,8 @@ public class Login extends AppCompatActivity {
     private long mBackPressedTime; // 뒤로가기 버튼을 누른 시간을 저장할 변수
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
         ID = findViewById(R.id.editID);
@@ -33,45 +27,93 @@ public class Login extends AppCompatActivity {
         Login = findViewById(R.id.loginbutton);
         Signup = findViewById(R.id.signin);
 
-        //로그인 버튼 이벤트
-        Login.setOnClickListener(view -> {
-            String id = ID.getText().toString();
-            String pw = Password.getText().toString();
-
-            Response.Listener<String> responseListener = response -> {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    boolean success = jsonObject.getBoolean("success");
-
-                    if (success) {
-                        String token = jsonObject.getString("token");
-
-                        // Save token to SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("token", token);
-                        editor.putString("userID", id);
-                        editor.apply();
-
-                        // Navigate to main activity
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-                        startActivity(intent);
-                        finish(); // Close login activity
-                    } else {
-                        Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "예외 발생", Toast.LENGTH_SHORT).show();
-                }
-            };
-
-            LoginRequestActivity loginRequestActivity = new LoginRequestActivity(id, pw, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(Login.this);
-            queue.add(loginRequestActivity);
+        //작업용 로그인 통과버튼. 완료 후엔 해당 블록 삭제할 것.
+        Login.setOnClickListener(v -> {
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            startActivity(intent);
         });
 
-        //회원가입 버튼 누르면 회원가입 페이지로 이동
+        /* 로그인 버튼 이벤트
+        Login.setOnClickListener(view -> {
+            String id = ID.getText().toString().trim();
+            String pw = Password.getText().toString().trim();
+
+            if (id.isEmpty() || pw.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "아이디와 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String url = "http://54.79.1.3:8080/members/login";
+
+            try {
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("id", id);
+                jsonBody.put("pw", pw);
+
+                String requestParam = jsonBody.toString();
+
+                StringRequest stringRequest = new StringRequest(
+                        Request.Method.POST,
+                        url,
+                        response -> {
+                            try {
+                                // 서버에서 응답으로 true 또는 false만 보내는 경우 처리
+                                boolean success = Boolean.parseBoolean(response.trim());
+
+                                if (success) {
+                                    // 로그인 성공 시 토큰을 받는 경우에 대비하여 처리
+                                    // 이 부분은 서버에서 실제로 토큰을 반환할 때 사용합니다.
+                                    // 예를 들어, 서버에서 "true" 또는 "false"만 반환하면 이 코드는 필요 없습니다.
+                                    // 이 예제에서는 서버가 "true"만 반환하고, 실제 토큰이 없다고 가정합니다.
+
+                                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("userID", id);
+                                    editor.apply();
+
+                                    // 메인 액티비티로 이동
+                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish(); // 로그인 액티비티 종료
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "로그인 실패: 아이디 또는 비밀번호를 확인하세요.", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "응답 처리 중 예외 발생: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        error -> {
+                            Log.e("LoginError", "서버 요청 실패: " + error.toString());  // 에러 로그
+                            Toast.makeText(getApplicationContext(), "서버 요청 실패: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                ) {
+                    @Override
+                    public byte[] getBody() {
+                        return requestParam == null ? null : requestParam.getBytes();
+                    }
+
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+                };
+
+                // 설정된 타임아웃 값을 10초로 변경
+                int timeoutMs = 10000; // 10초
+                RetryPolicy retryPolicy = new DefaultRetryPolicy(timeoutMs, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                stringRequest.setRetryPolicy(retryPolicy);
+
+                RequestQueue queue = Volley.newRequestQueue(Login.this);
+                queue.add(stringRequest);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "JSON 구성 중 예외 발생: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        */
+
+        // 회원가입 버튼 누르면 회원가입 페이지로 이동
         Signup.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
@@ -80,28 +122,17 @@ public class Login extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // 현재 시간 가져옴
         long currentTime = System.currentTimeMillis();
 
-        // 뒤로가기 버튼을 처음 눌렀을 때
         if (mBackPressedTime + TIME_INTERVAL > currentTime) {
             super.onBackPressed();
-        } else { // 뒤로가기 버튼 처음 눌렀거나 시간 간격을 초과
-            Intent intent = new Intent(Login.this, Login.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            final Toast toast = Toast.makeText(this, "한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT);
+        } else {
+            Toast toast = Toast.makeText(this, "한 번 더 누르면 종료됩니다", Toast.LENGTH_SHORT);
             toast.show();
 
-            //TIME_INTERVAL 만큼 토스트 띄우기
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    toast.cancel();
-                }
-            }, TIME_INTERVAL);
+            new Handler().postDelayed(toast::cancel, TIME_INTERVAL);
         }
-        // 뒤로가기 버튼 누른 시간을 업데이트
+
         mBackPressedTime = currentTime;
     }
 }
