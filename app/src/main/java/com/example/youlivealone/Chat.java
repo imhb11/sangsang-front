@@ -10,7 +10,6 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
-
         //버튼 작동코드들
 
         findViewById(R.id.map).setOnClickListener(v -> {

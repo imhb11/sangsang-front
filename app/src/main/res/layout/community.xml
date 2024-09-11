@@ -9,54 +9,82 @@
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/populargrid"
-        android:layout_width="400dp"
-        android:layout_height="220dp"
+        android:layout_width="386dp"
+        android:layout_height="160dp"
         android:layout_gravity="center"
+        app:columnCount="2"
         app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.291"
-        app:columnCount="2"
         app:rowCount="2">
 
         <Button
             android:id="@+id/btn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_width="193dp"
+            android:layout_height="80dp" />
+
         <Button
             android:id="@+id/btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_width="193dp"
+            android:layout_height="80dp" />
+
         <Button
             android:id="@+id/btn3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_width="193dp"
+            android:layout_height="80dp" />
+
         <Button
             android:id="@+id/btn4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_width="193dp"
+            android:layout_height="80dp" />
     </androidx.gridlayout.widget.GridLayout>
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/categorygrid"
-        android:layout_width="400dp"
-        android:layout_height="330dp"
+        android:layout_width="386dp"
+        android:layout_height="270dp"
         android:layout_gravity="center"
+        app:columnCount="2"
         app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.384"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.843"
-        app:rowCount="3"
-        app:columnCount="2">
+        app:rowCount="3">
 
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
+
+        <Button
+            android:id="@+id/btn6"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
+
+        <Button
+            android:id="@+id/btn7"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
+
+        <Button
+            android:id="@+id/btn8"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
+
+        <Button
+            android:id="@+id/btn9"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
+
+        <Button
+            android:id="@+id/btn10"
+            android:layout_width="193dp"
+            android:layout_height="90dp" />
     </androidx.gridlayout.widget.GridLayout>
     <TextView
         android:id="@+id/popular"
@@ -128,10 +156,11 @@
         android:id="@+id/textView3"
         android:layout_width="194dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="community"
         android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

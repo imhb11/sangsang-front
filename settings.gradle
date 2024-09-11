@@ -13,7 +13,6 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
@@ -26,4 +25,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "YouLiveAlone"
 include ':app'
-include ':OpenCV'
