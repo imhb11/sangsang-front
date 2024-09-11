@@ -52,7 +52,10 @@ dependencies {
     implementation "org.tensorflow:tensorflow-lite:2.8.0"
     implementation "org.tensorflow:tensorflow-lite-gpu:2.8.0"
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
-    implementation "com.naver.maps:map-sdk:3.16.0"
+        //지도
+    implementation 'com.naver.maps:map-sdk:3.18.0'
+    //위치
+    implementation 'com.google.android.gms:play-services-location:21.3.0'
 
     // 라이브러리 참조를 위한 추가 종속성
     implementation libs.appcompat
@@ -62,6 +65,7 @@ dependencies {
     implementation libs.gridlayout
     implementation project(':OpenCV')
 
+    implementation libs.databinding.runtime
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
