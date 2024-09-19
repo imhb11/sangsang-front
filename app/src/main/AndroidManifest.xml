@@ -41,6 +41,11 @@
         <activity android:name=".GroupActivity"/>
         <activity android:name=".PurchaseActivity"/>
         <activity android:name=".ReviewActivity"/>
+        <activity android:name=".ViewChatRoomsActivity"/>
+        <activity android:name=".ViewCommentsActivity"/>
+        <activity android:name=".ViewLikedPostsActivity"/>
+        <activity android:name=".ViewPostsActivity"/>
+
 
 
 
