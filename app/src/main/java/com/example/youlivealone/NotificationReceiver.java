@@ -1,9 +1,8 @@
-//상단바 알림 매일 같은 시간에 설정하기 위한 클래스
-
 package com.example.youlivealone;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +27,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         // 큰 아이콘 설정
         Bitmap mLargeIconForNoti = BitmapFactory.decodeResource(context.getResources(), R.drawable.image1);
 
+        // Check 액티비티를 실행하기 위한 Intent 생성
+        Intent notificationIntent = new Intent(context, Check.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);  // 새로운 태스크로 액티비티를 실행
+
+        // PendingIntent 생성
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         // 알림 빌더 생성
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.image1)
@@ -36,7 +42,8 @@ public class NotificationReceiver extends BroadcastReceiver {
                 .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                 .setLargeIcon(mLargeIconForNoti)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+                .setAutoCancel(true) // 알림 터치 시 자동으로 제거
+                .setContentIntent(pendingIntent); // 알림 터치 시 실행할 PendingIntent 설정
 
         // 알림 표시
         notificationManager.notify(1001, builder.build());
