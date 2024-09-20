@@ -5,22 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--지도 불러오기 -->
-    <!--버튼 위치-->
     <com.naver.maps.map.MapView
         android:id="@+id/map_fragment"
         android:name="com.naver.maps.map.MapFragment"
-        android:layout_width="410dp"
-        android:layout_height="787dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:navermap_locationButtonEnabled="true"
-        app:navermap_tiltGesturesEnabled="false" />
+        app:navermap_tiltGesturesEnabled="false"
+        tools:layout_editor_absoluteX="13dp" />
+<!--버튼 위치-->
+    <com.naver.maps.map.widget.LocationButtonView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"
+        app:layout_constraintTop_toTopOf="@id/zoom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
+    <com.naver.maps.map.widget.ZoomControlView
+        android:id="@+id/zoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!--카테고리-->
     <HorizontalScrollView
@@ -109,8 +124,6 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.714"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
@@ -123,7 +136,7 @@
         android:layout_marginRight="24dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/map"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toStartOf="@+id/check"
         app:layout_constraintHorizontal_bias="0.551"
         app:layout_constraintStart_toStartOf="parent" />
@@ -135,7 +148,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/home"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toStartOf="@+id/chat" />
 
     <ImageButton
@@ -145,7 +158,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/chat"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toStartOf="@+id/mypage" />
 
     <ImageButton
@@ -155,7 +168,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/mypage"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
@@ -165,7 +178,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/check"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/map_fragment"
         app:layout_constraintEnd_toStartOf="@+id/home" />
 
 
