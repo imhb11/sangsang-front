@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account Settings"
+        android:text="계정설정"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center"
@@ -21,10 +21,20 @@
         android:id="@+id/edit_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Change Nickname"
+        android:hint="변경할 닉네임을 입력해주세요."
         android:inputType="textPersonName"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/button_save_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Nickname"
+        android:padding="12dp"
+        android:backgroundTint="@color/gray_dark"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="16dp"/>
 
     <!-- Email Change -->
@@ -32,32 +42,41 @@
         android:id="@+id/edit_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Change Email"
+        android:hint="변경할 Email을 입력해주세요."
         android:inputType="textEmailAddress"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/button_save_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Email"
+        android:padding="12dp"
+        android:backgroundTint="@color/gray_dark"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="16dp"/>
 
     <!-- Contact Registration/Change -->
     <EditText
-        android:id="@+id/edit_contact"
+        android:id="@+id/edit_emergency_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Add/Change Contact"
+        android:hint="비상연락처를 입력해주세요."
         android:inputType="phone"
         android:padding="12dp"
         android:background="@android:drawable/edit_text"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="8dp"/>
 
-    <!-- Save Button -->
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/button_save_emergency_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Changes"
+        android:text="Save Contact"
         android:padding="12dp"
-        android:layout_marginTop="20dp"
         android:backgroundTint="@color/gray_dark"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
 
 </LinearLayout>
