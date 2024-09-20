@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="알림 설정"
+        android:text="Notification Settings"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_gravity="center"
@@ -21,7 +21,7 @@
         android:id="@+id/switch_global_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="전체 알림 끄기"
+        android:text="Enable All Notifications"
         android:checked="true"
         android:layout_marginBottom="16dp"/>
 
@@ -30,7 +30,7 @@
         android:id="@+id/switch_comment_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="댓글 알림"
+        android:text="Comment Notifications"
         android:checked="true"
         android:layout_marginBottom="16dp"/>
 
@@ -39,7 +39,7 @@
         android:id="@+id/switch_chat_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="채팅방 알림"
+        android:text="Chat Room Notifications"
         android:checked="true"
         android:layout_marginBottom="16dp"/>
 
@@ -48,7 +48,7 @@
         android:id="@+id/switch_like_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="공감 알림"
+        android:text="Like Notifications"
         android:checked="true"
         android:layout_marginBottom="16dp"/>
 
