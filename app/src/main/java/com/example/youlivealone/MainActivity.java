@@ -31,15 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding mBinding;
     private Handler sliderHandler = new Handler();
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    // 사용자가 알림 권한을 허용함
-                    setDailyAlarm();
-                } else {
-                    // 사용자가 알림 권한을 거부함
-                }
-            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +39,6 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        // Android 13 이상에서는 알림 권한이 필요한지 확인하고 요청
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                setDailyAlarm(); // 권한이 이미 있을 경우 알람 설정
-            } else {
-                requestNotificationPermission(); // 권한 요청
-            }
-        } else {
-            setDailyAlarm(); // Android 13 이하에서는 권한 요청 필요 없음
-        }
 
         // 이미지 슬라이드 코드
         ViewPager2 viewPager2 = mBinding.viewPager;
@@ -145,28 +127,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // 알림 권한 요청 처리
-    private void requestNotificationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
-            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-        }
-    }
-
-    // 매일 알림 설정
-    private void setDailyAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 10);
-        calendar.set(Calendar.SECOND, 0);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-    }
 
     @Override
     public void onBackPressed() {
