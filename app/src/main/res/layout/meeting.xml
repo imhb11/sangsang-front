@@ -105,10 +105,10 @@
         android:id="@+id/categorybutton"
         android:layout_width="104dp"
         android:layout_height="24dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/meeting_category"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.081"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
@@ -174,67 +174,6 @@
 
     </androidx.gridlayout.widget.GridLayout>
 
-    <androidx.gridlayout.widget.GridLayout
-        android:id="@+id/gathering_town"
-        android:layout_width="378dp"
-        android:layout_height="268dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="12dp"
-        app:columnCount="3"
-        android:layout_marginRight="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.657"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
-        app:layout_constraintVertical_bias="0.723"
-        app:rowCount="2">
-
-        <ImageButton
-            android:id="@+id/imageButton8"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_editor_absoluteY="159dp" />
-
-        <ImageButton
-            android:id="@+id/imageButton9"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:layout_constraintStart_toEndOf="@+id/imageButton2"
-            app:layout_constraintTop_toTopOf="@+id/imageButton2"
-            app:srcCompat="@mipmap/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/imageButton10"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:layout_constraintStart_toEndOf="@+id/imageButton3"
-            app:layout_constraintTop_toTopOf="@+id/imageButton3"
-            app:srcCompat="@mipmap/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/imageButton11"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:srcCompat="@mipmap/ic_launcher" />
-
-        <ImageButton
-            android:id="@+id/imageButton12"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_editor_absoluteY="281dp" />
-
-        <ImageButton
-            android:id="@+id/imageButton13"
-            android:layout_width="126dp"
-            android:layout_height="134dp"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_editor_absoluteY="258dp" />
-    </androidx.gridlayout.widget.GridLayout>
-
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="50dp"
@@ -260,10 +199,26 @@
         android:id="@+id/textView13"
         android:layout_width="84dp"
         android:layout_height="24dp"
-        android:layout_marginTop="296dp"
+        android:layout_marginTop="292dp"
         android:background="@drawable/meeting_neighborhood"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintHorizontal_bias="0.055"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/categorybutton" />
+
+    <com.naver.maps.map.MapView
+        android:id="@+id/meeting_map_fragment"
+        android:name="com.naver.maps.map.MapFragment"
+        android:layout_width="378dp"
+        android:layout_height="268dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="92dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        app:navermap_locationButtonEnabled="true"
+        app:navermap_tiltGesturesEnabled="false" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
