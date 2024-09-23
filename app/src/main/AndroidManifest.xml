@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -36,6 +40,7 @@
         <activity android:name=".Meeting_write" />
         <activity android:name=".AddMessageBoard" />
         <activity android:name=".AccountSettingsActivity"/>
+        <receiver android:name=".NotificationReceiver" />
         <activity android:name=".NotificationSettingsActivity"/>
         <activity android:name=".CommunityActivity"/>
         <activity android:name=".GroupActivity"/>
@@ -46,8 +51,6 @@
         <activity android:name=".ViewLikedPostsActivity"/>
         <activity android:name=".ViewPostsActivity"/>
 
-
-
         <activity android:name=".Login"
             android:exported="true">
             <intent-filter>
@@ -55,8 +58,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".BootReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".Register" />
         <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>
