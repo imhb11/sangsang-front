@@ -10,10 +10,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.youlivealone.Chat;
+import com.example.youlivealone.MainActivity;
+import com.example.youlivealone.Mypage;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +36,9 @@ public class Check extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private Map<CalendarDay, String> moodMap = new HashMap<>(); // 날짜와 기분 매핑
     private SharedPreferences sharedPreferences;
+    private String jwtToken;  // JWT 토큰을 저장할 변수
+    private String memberId = "your_member_id"; // 실제 memberId 값 설정
+    private RequestQueue requestQueue;  // Volley의 요청 큐
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +48,14 @@ public class Check extends AppCompatActivity {
         calendarView = findViewById(R.id.calendarView);
         sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
 
+        // JWT 토큰 가져오기 (예시: SharedPreferences에서 가져온다고 가정)
+        jwtToken = sharedPreferences.getString("jwt_token", "");
+
         // 이전에 저장된 이모티콘 상태 복원
         loadMoodsFromPreferences();
+
+        // Volley 요청 큐 초기화
+        requestQueue = Volley.newRequestQueue(this);
 
         // 오늘 날짜 가져오기
         CalendarDay today = CalendarDay.today();
@@ -70,8 +92,49 @@ public class Check extends AppCompatActivity {
                     moodMap.put(date, selectedMood);
                     saveMoodToPreferences(date, selectedMood);
                     calendarView.addDecorator(new MoodDecorator(date, selectedMood)); // 데코레이터 추가
+
+                    // 기분 선택 후 POST 요청 보내기
+                    sendMoodCheckRequest(selectedMood);
                 });
         builder.create().show();
+    }
+
+    // 기분 체크 POST 요청 보내기
+    private void sendMoodCheckRequest(String selectedMood) {
+        String url = "http://localhost:8080/check?memberId=" + memberId;
+
+        // JSON 객체 생성
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("mood", selectedMood);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // POST 요청 생성
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(Check.this, "출석 체크 완료!", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(Check.this, "출석 체크 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + jwtToken); // JWT 토큰 추가
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+
+        // 요청 큐에 추가
+        requestQueue.add(jsonObjectRequest);
     }
 
     // MoodDecorator 클래스
