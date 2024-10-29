@@ -66,10 +66,6 @@ public class Mypage extends AppCompatActivity {
         });
 
         // 기존 버튼 작동 코드
-        findViewById(R.id.map).setOnClickListener(v -> {
-            startActivity(new Intent(Mypage.this, Map.class));
-        });
-
         findViewById(R.id.check).setOnClickListener(v -> {
             startActivity(new Intent(Mypage.this, Check.class));
         });
