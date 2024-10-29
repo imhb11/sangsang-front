@@ -1,14 +1,26 @@
 package com.example.youlivealone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
     EditText ID, Password;
@@ -27,14 +39,6 @@ public class Login extends AppCompatActivity {
         Login = findViewById(R.id.loginbutton);
         Signup = findViewById(R.id.signin);
 
-        //작업용 로그인 통과버튼. 완료 후엔 해당 블록 삭제할 것.
-        Login.setOnClickListener(v -> {
-            Intent intent = new Intent(Login.this, MainActivity.class);
-            startActivity(intent);
-        });
-
-        /*
-
         Login.setOnClickListener(view -> {
             String id = ID.getText().toString().trim();
             String pw = Password.getText().toString().trim();
@@ -44,7 +48,7 @@ public class Login extends AppCompatActivity {
                 return;
             }
 
-            String url = "http://54.79.1.3:8080/members/login";
+            String url = "http://15.165.92.121:8080/members/login";
 
             try {
                 JSONObject jsonBody = new JSONObject();
@@ -100,7 +104,7 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "JSON 구성 중 예외 발생: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-*/
+
         // 회원가입 버튼 누르면 회원가입 페이지로 이동
         Signup.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);
