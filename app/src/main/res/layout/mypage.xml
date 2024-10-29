@@ -4,296 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".Mypage">
 
-    <!-- Title -->
+    <!-- Header Background -->
+    <View
+        android:id="@+id/header_background"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:background="#BAA681"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Title Text -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My page"
-        android:textSize="24sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="마이페이지"
+        android:textSize="36sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/header_background"
+        app:layout_constraintBottom_toBottomOf="@id/header_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Profile Section -->
-    <LinearLayout
-        android:id="@+id/profile_section"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp">
-
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_profile"
-            android:contentDescription="Profile Image"
-            android:layout_gravity="center"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/nickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="닉네임"
-                android:layout_marginTop="8dp"/>
-
-            <TextView
-                android:id="@+id/points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="보유 포인트: 11P"
-                android:layout_marginTop="4dp"/>
-
-        </LinearLayout>
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <!-- Settings Section -->
-    <LinearLayout
-        android:id="@+id/settings_section"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="128dp"
-        android:layout_marginBottom="16dp">
-
-
+    <!-- Settings Icon -->
     <ImageButton
-            android:id="@+id/account_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/account_settings"
-            android:paddingStart="72dp"
-            android:paddingEnd="8dp"
-            android:background="@null"
-            android:contentDescription="계정설정"/>
+        android:id="@+id/settings_icon"
+        android:layout_width="51dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/mypage_setting_button"
+        android:contentDescription="Settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_background"
+        android:onClick="openSettingsScreen"/>
 
-        <ImageButton
-            android:id="@+id/notification_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/notification_settings"
-            android:paddingStart="16dp"
-            android:paddingEnd="8dp"
-            android:background="@null"
-            android:contentDescription="알림설정"/>
-    </LinearLayout>
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo"
+        android:background="@drawable/circular_background"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="-50dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/header_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Profile Image" />
 
-
+    <!-- Nickname Text -->
     <TextView
-        android:id="@+id/activity_label"
+        android:id="@+id/nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="나의 활동"
+        android:text="고슴도치"
         android:textSize="18sp"
-        android:textColor="@color/gray_dark"
+        android:textColor="#000000"
         android:fontFamily="sans-serif-medium"
-        app:layout_constraintTop_toBottomOf="@id/profile_section"
+        app:layout_constraintTop_toBottomOf="@id/profile_image"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginBottom="8dp"/>
-    <!-- Menu Items -->
-    <LinearLayout
-        android:id="@+id/menu_items"
-        android:layout_width="0dp"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Points Text -->
+    <TextView
+        android:id="@+id/points"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/rounded_box_background"
-        android:padding="24dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_section"
+        android:text="보유 ... P"
+        android:textSize="14sp"
+        android:textColor="#BAA681"
+        app:layout_constraintTop_toBottomOf="@id/nickname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="24dp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Menu Item 1: Group -->
+    <LinearLayout
+        android:id="@+id/menu_item_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/points"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@id/materialToolbar">
+        android:clickable="true"
+        android:focusable="true">
 
-        <!-- Menu Item 1 -->
-        <LinearLayout
-            android:id="@+id/menu_item_1"
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/mypage_meetinglist_logo"
+            android:contentDescription="Group Icon"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_purchase"
-                android:contentDescription="구매목록 이미지"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="구매목록"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:textSize="16sp"
-                android:textColor="@color/gray_dark"/>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:contentDescription="Arrow Icon"/>
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"
-            android:layout_marginVertical="8dp"/>
-
-        <!-- Menu Item 2 -->
-        <LinearLayout
-            android:id="@+id/menu_item_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_group"
-                android:contentDescription="소속 소모임 이미지"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="소속 소모임"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:textSize="16sp"
-                android:textColor="@color/gray_dark"/>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:contentDescription="Arrow Icon"/>
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"
-            android:layout_marginVertical="8dp"/>
-
-        <!-- Menu Item 3 -->
-        <LinearLayout
-            android:id="@+id/menu_item_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_community"
-                android:contentDescription="소속 커뮤니티 이미지"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="소속 커뮤니티"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:textSize="16sp"
-                android:textColor="@color/gray_dark"/>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:contentDescription="Arrow Icon"/>
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"
-            android:layout_marginVertical="8dp"/>
-
-        <!-- Menu Item 4 -->
-        <LinearLayout
-            android:id="@+id/menu_item_4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_review"
-                android:contentDescription="동네지도 후기 내역 이미지"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="동네지도 후기 내역"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:textSize="16sp"
-                android:textColor="@color/gray_dark"/>
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:contentDescription="Arrow Icon"/>
-        </LinearLayout>
+            android:text="소속 소모임"
+            android:textSize="16sp"
+            android:textColor="#BAA681"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/menu_item_group" />
 
-    <!-- Additional Components -->
+    <!-- Menu Item 2: Community -->
+    <LinearLayout
+        android:id="@+id/menu_item_community"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/menu_item_group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/mypage_communitylist_logo"
+            android:contentDescription="Community Icon"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="커뮤니티 내역"
+            android:textSize="16sp"
+            android:textColor="#BAA681"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Bottom Navigation Bar -->
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
@@ -305,7 +170,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/community"
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
