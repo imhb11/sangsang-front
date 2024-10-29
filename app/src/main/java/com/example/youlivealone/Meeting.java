@@ -20,8 +20,6 @@ import com.naver.maps.map.util.FusedLocationSource;
 import java.util.List;
 
 public class Meeting extends AppCompatActivity implements OnMapReadyCallback {
-    private GridLayout meeting_categorygrid;
-    private RoomViewModel roomViewModel;
     private MapView mapView;
     private NaverMap mnavermap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
@@ -48,12 +46,6 @@ public class Meeting extends AppCompatActivity implements OnMapReadyCallback {
 
 
         //하단바 버튼 작동코드들
-
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(Meeting.this, Map.class);
-            startActivity(intent);
-        });
-
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(Meeting.this, Check.class);
             startActivity(intent);

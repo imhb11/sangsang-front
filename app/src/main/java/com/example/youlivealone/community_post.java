@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,10 +25,12 @@ public class community_post extends AppCompatActivity {
     private String postId; // 게시물 ID
     private TextView likesCountView; // 좋아요 수를 표시할 TextView
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community_post);
+
 
         TextView titleView = findViewById(R.id.title);
         TextView contentView = findViewById(R.id.post_content);
@@ -125,5 +128,6 @@ public class community_post extends AppCompatActivity {
 
         // 요청을 큐에 추가
         queue.add(jsonObjectRequest);
+
     }
 }

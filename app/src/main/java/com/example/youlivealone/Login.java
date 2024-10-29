@@ -105,6 +105,10 @@ public class Login extends AppCompatActivity {
             }
         });
 
+
+
+
+
         // 회원가입 버튼 누르면 회원가입 페이지로 이동
         Signup.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, Register.class);

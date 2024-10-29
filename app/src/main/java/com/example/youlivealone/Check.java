@@ -93,6 +93,7 @@ public class Check extends AppCompatActivity {
 
                     // 출석 체크 요청 보내기 (기분 데이터 제외)
                     sendMoodCheckRequest();
+
                 });
         builder.create().show();
     }
@@ -103,6 +104,7 @@ public class Check extends AppCompatActivity {
 
         // JSON 객체 생성 - 내용 없이 빈 객체를 보내기
         JSONObject jsonBody = new JSONObject();
+
 
         // POST 요청 생성
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,

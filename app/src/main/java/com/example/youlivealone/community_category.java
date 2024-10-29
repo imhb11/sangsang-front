@@ -203,6 +203,7 @@ public class community_category extends AppCompatActivity {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
 //                                String postId = post.getString("postId"); // postId 가져오기
+
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
@@ -241,6 +242,7 @@ public class community_category extends AppCompatActivity {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
 //                                String postId = post.getString("postId"); // postId 가져오기
+
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");

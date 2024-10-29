@@ -3,7 +3,8 @@ package com.example.youlivealone;
 import java.io.Serializable;
 
 public class Post implements Serializable {
-    private String community_postid;
+    //private String community_postid;
+
     private int userid;
     private String title;
     private String content;
@@ -19,6 +20,7 @@ public class Post implements Serializable {
 //    public String getId() {
 //        return community_postid;
 //    }
+
     public int getUserId() {
         return userid;
     }

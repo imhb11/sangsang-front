@@ -17,12 +17,6 @@ public class Meeting_category extends AppCompatActivity {
         setContentView(R.layout.meeting_categoty);
 
         //하단바 버튼 작동코드들
-
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(Meeting_category.this, Map.class);
-            startActivity(intent);
-        });
-
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(Meeting_category.this, Check.class);
             startActivity(intent);
