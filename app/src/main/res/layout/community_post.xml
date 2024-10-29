@@ -61,4 +61,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+
+    <ImageButton
+        android:id="@+id/goodbutton"
+        android:layout_width="69dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="76dp"
+        app:layout_constraintBottom_toTopOf="@+id/listView2"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ListView
+        android:id="@+id/listView2"
+        android:layout_width="409dp"
+        android:layout_height="331dp"
+        app:layout_constraintBottom_toTopOf="@+id/subtitle_input"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/goodcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="248dp"
+        android:layout_marginEnd="220dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

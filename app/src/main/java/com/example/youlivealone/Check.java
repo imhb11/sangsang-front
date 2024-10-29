@@ -44,7 +44,6 @@ public class Check extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check);
-
         calendarView = findViewById(R.id.calendarView);
         sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
 
@@ -70,8 +69,7 @@ public class Check extends AppCompatActivity {
             }
         });
 
-        // 버튼 작동 코드들
-        findViewById(R.id.map).setOnClickListener(v -> startActivity(new Intent(Check.this, Map.class)));
+        // 버튼 작동 코드
         findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(Check.this, Check.class)));
         findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(Check.this, MainActivity.class)));
         findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(Check.this, Chat.class)));
@@ -93,23 +91,20 @@ public class Check extends AppCompatActivity {
                     saveMoodToPreferences(date, selectedMood);
                     calendarView.addDecorator(new MoodDecorator(date, selectedMood)); // 데코레이터 추가
 
-                    // 기분 선택 후 POST 요청 보내기
-                    sendMoodCheckRequest(selectedMood);
+                    // 출석 체크 요청 보내기 (기분 데이터 제외)
+                    sendMoodCheckRequest();
+
                 });
         builder.create().show();
     }
 
-    // 기분 체크 POST 요청 보내기
-    private void sendMoodCheckRequest(String selectedMood) {
-        String url = "http://localhost:8080/check?memberId=" + memberId;
+    // 기분 체크 POST 요청 보내기 (기분 정보는 보내지 않음)
+    private void sendMoodCheckRequest() {
+        String url = "http://15.165.92.121:8080/attendance/check";
 
-        // JSON 객체 생성
+        // JSON 객체 생성 - 내용 없이 빈 객체를 보내기
         JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("mood", selectedMood);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
 
         // POST 요청 생성
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
