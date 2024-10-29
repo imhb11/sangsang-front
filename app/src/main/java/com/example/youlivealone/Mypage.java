@@ -34,14 +34,15 @@ public class Mypage extends AppCompatActivity {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Handler mainHandler = new Handler(Looper.getMainLooper());
 
+        // 닉네임 가져오기
         executorService.execute(() -> {
             try {
-                // 네트워크 요청 수행
-                URL url = new URL("https://your-api-url.com/userinfo?userid=yourUserId");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
+                // 닉네임 조회 API 호출
+                URL nicknameUrl = new URL("http://54.79.1.3:8080/mypage/nickname/{memberId}");
+                HttpURLConnection nicknameConnection = (HttpURLConnection) nicknameUrl.openConnection();
+                nicknameConnection.setRequestMethod("GET");
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(nicknameConnection.getInputStream()));
                 StringBuilder result = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -50,13 +51,41 @@ public class Mypage extends AppCompatActivity {
                 reader.close();
 
                 // JSON 파싱
-                JSONObject jsonObject = new JSONObject(result.toString());
-                String nickname = jsonObject.getString("nickname");
-                int points = jsonObject.getInt("points");
+                JSONObject nicknameJson = new JSONObject(result.toString());
+                String nickname = nicknameJson.getString("nickname");
 
                 // UI 업데이트 (UI 스레드에서 실행)
                 mainHandler.post(() -> {
                     nicknameTextView.setText(nickname);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 포인트 가져오기
+        executorService.execute(() -> {
+            try {
+                // 포인트 조회 API 호출
+                URL pointsUrl = new URL("http://54.79.1.3:8080/mypage/points/{memberId}");
+                HttpURLConnection pointsConnection = (HttpURLConnection) pointsUrl.openConnection();
+                pointsConnection.setRequestMethod("GET");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(pointsConnection.getInputStream()));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                reader.close();
+
+                // JSON 파싱
+                JSONObject pointsJson = new JSONObject(result.toString());
+                int points = pointsJson.getInt("points");
+
+                // UI 업데이트 (UI 스레드에서 실행)
+                mainHandler.post(() -> {
                     pointsTextView.setText("보유 포인트: " + points + " P");
                 });
 
