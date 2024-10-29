@@ -63,18 +63,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 버튼 작동 코드들
-        mBinding.setting.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-            startActivity(intent);
-        });
 
         mBinding.notice.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Notice.class);
-            startActivity(intent);
-        });
-
-        mBinding.honeytip.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Honeytip.class);
             startActivity(intent);
         });
 
@@ -98,15 +89,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        mBinding.recycle.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Recycle.class);
-            startActivity(intent);
-        });
-
-        mBinding.map.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Map.class);
-            startActivity(intent);
-        });
 
         mBinding.check.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Check.class);

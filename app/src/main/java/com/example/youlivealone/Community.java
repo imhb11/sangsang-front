@@ -5,50 +5,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
+
 import androidx.gridlayout.widget.GridLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import java.util.List;
+
 
 public class Community extends AppCompatActivity {
-    private RoomViewModel roomViewModel;
-    private GridLayout popularGrid;
-    private GridLayout categoryGrid;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.community);
 
-        popularGrid = findViewById(R.id.populargrid);
-        categoryGrid = findViewById(R.id.categorygrid);
-
-        roomViewModel = new ViewModelProvider(this).get(RoomViewModel.class);
-        roomViewModel.getRoomList().observe(this, new Observer<List<String>>() {
-
-            @Override
-            public void onChanged(List<String> rooms) {
-                updateGridLayout(popularGrid, rooms, 2);
-            }
-        });
-
-        roomViewModel.getRoomList1().observe(this, new Observer<List<String>>() {
-
-            @Override
-            public void onChanged(List<String> rooms) {
-                updateGridLayout(categoryGrid, rooms, 2);
-            }
-        });
-
 
         //버튼 작동코드들
-
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(Community.this, Map.class);
-            startActivity(intent);
-        });
-
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(Community.this, Check.class);
             startActivity(intent);
@@ -67,38 +38,40 @@ public class Community extends AppCompatActivity {
             Intent intent = new Intent(Community.this, Mypage.class);
             startActivity(intent);
         });
-    }
 
-    private void updateGridLayout(GridLayout gridLayout, List<String> rooms, int columns) {
-        gridLayout.removeAllViews();  // 기존 버튼 제거
+        GridLayout populargridLayout = findViewById(R.id.populargrid);
+        for(int i = 0; i < populargridLayout.getChildCount(); i++) {
+            View child = populargridLayout.getChildAt(i);
+            if (child instanceof ImageButton) {
+                child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Community.this, Chat.class);
+                        // 각 버튼에 맞는 데이터를 인텐트에 추가
+                        intent.putExtra("buttonId", v.getId());
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
 
-        for (int i = 0; i < rooms.size(); i++) {
-            String roomName = rooms.get(i);
 
-            Button button = new Button(this);
-            button.setText(roomName);
-            button.setLayoutParams(new GridLayout.LayoutParams(
-                    GridLayout.spec(i / columns), GridLayout.spec(i % columns)));
-
-            // 카테고리 ID 설정 (예: roomName에 따라 ID 매핑)
-            int categoryId = i + 1; // 버튼 인덱스를 카테고리 ID로 사용 (1부터 6까지)
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 선택한 카테고리 ID 저장
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("categoryId", categoryId); // 카테고리 ID 저장
-                    editor.apply();
-
-                    // 버튼 클릭 시의 동작 정의
-                    Intent intent = new Intent(Community.this, community_category.class);
-                    startActivity(intent);
-                }
-            });
-
-            gridLayout.addView(button);
+        GridLayout categorygridLayout = findViewById(R.id.categorygrid);
+        for(int i = 0; i < categorygridLayout.getChildCount(); i++) {
+            View child = categorygridLayout.getChildAt(i);
+            if (child instanceof ImageButton) {
+                child.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Community.this, community_category.class);
+                        // 각 버튼에 맞는 데이터를 인텐트에 추가
+                        intent.putExtra("buttonId", v.getId());
+                        startActivity(intent);
+                    }
+                });
+            }
         }
     }
+
+
 }

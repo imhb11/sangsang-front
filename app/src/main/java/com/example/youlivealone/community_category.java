@@ -164,12 +164,8 @@ public class community_category extends AppCompatActivity {
             Intent intent = new Intent(community_category.this, MessageBoard.class);
             startActivity(intent);
         });
-        //버튼 작동코드들
 
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(community_category.this, Map.class);
-            startActivity(intent);
-        });
+        //버튼 작동코드들
 
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(community_category.this, Check.class);

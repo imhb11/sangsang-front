@@ -12,12 +12,6 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.chat);
 
         //버튼 작동코드들
-
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(Chat.this, Map.class);
-            startActivity(intent);
-        });
-
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(Chat.this, Check.class);
             startActivity(intent);
