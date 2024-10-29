@@ -1,6 +1,7 @@
 package com.example.youlivealone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -79,9 +80,18 @@ public class Community extends AppCompatActivity {
             button.setLayoutParams(new GridLayout.LayoutParams(
                     GridLayout.spec(i / columns), GridLayout.spec(i % columns)));
 
+            // 카테고리 ID 설정 (예: roomName에 따라 ID 매핑)
+            int categoryId = i + 1; // 버튼 인덱스를 카테고리 ID로 사용 (1부터 6까지)
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 선택한 카테고리 ID 저장
+                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("categoryId", categoryId); // 카테고리 ID 저장
+                    editor.apply();
+
                     // 버튼 클릭 시의 동작 정의
                     Intent intent = new Intent(Community.this, community_category.class);
                     startActivity(intent);
