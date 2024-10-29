@@ -1,6 +1,7 @@
 package com.example.youlivealone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -53,6 +54,7 @@ public class Community extends AppCompatActivity {
                 });
             }
         }
+
 
         GridLayout categorygridLayout = findViewById(R.id.categorygrid);
         for(int i = 0; i < categorygridLayout.getChildCount(); i++) {

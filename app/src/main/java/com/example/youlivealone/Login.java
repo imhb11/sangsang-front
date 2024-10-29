@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity {
         Login = findViewById(R.id.loginbutton);
         Signup = findViewById(R.id.signin);
 
-        //작업용 로그인 통과버튼. 완료 후엔 해당 블록 삭제할 것.
+        // 작업용 로그인 통과버튼. 완료 후엔 해당 블록 삭제할 것.
         Login.setOnClickListener(v -> {
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
