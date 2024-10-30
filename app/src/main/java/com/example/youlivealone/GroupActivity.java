@@ -1,39 +1,158 @@
 package com.example.youlivealone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class GroupActivity extends AppCompatActivity {
+
+    private static final String BASE_URL = "http://15.165.92.121:8080/mypage/meetings";
+    private String memberId;
+    private LinearLayout groupList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        // Back 버튼 클릭 시 Mypage로 돌아가기
+
+        // Initialize UI components
         TextView backButton = findViewById(R.id.back_button);
+        groupList = findViewById(R.id.group_list_container);
+
+        // Get JWT token
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("jwtToken", null);
+        if (token == null) {
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Extract memberId from token
+        memberId = extractMemberIdFromToken(token);
+
+        // Back button functionality
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(GroupActivity.this, Mypage.class);
             startActivity(intent);
-            finish(); // 현재 Activity 종료하여 돌아가기
-        });
-        // 기존 버튼 작동 코드
-        findViewById(R.id.check).setOnClickListener(v -> {
-            startActivity(new Intent(GroupActivity.this, Check.class));
+            finish();
         });
 
-        findViewById(R.id.home).setOnClickListener(v -> {
-            startActivity(new Intent(GroupActivity.this, MainActivity.class));
-        });
+        // Fetch group data from backend
+        fetchGroupData();
 
-        findViewById(R.id.chat).setOnClickListener(v -> {
-            startActivity(new Intent(GroupActivity.this, Chat.class));
-        });
+        // Bottom Navigation Bar functionality
+        findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(this, Check.class)));
+        findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
+        findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(this, Chat.class)));
+        findViewById(R.id.mypage).setOnClickListener(v -> startActivity(new Intent(this, Mypage.class)));
+    }
 
-        findViewById(R.id.mypage).setOnClickListener(v -> {
-            startActivity(new Intent(GroupActivity.this, Mypage.class));
-        });
+    private String extractMemberIdFromToken(String token) {
+        try {
+            JSONObject jsonObject = new JSONObject(new String(android.util.Base64.decode(token.split("\\.")[1], android.util.Base64.DEFAULT)));
+            return jsonObject.getString("sub");
+        } catch (Exception e) {
+            Log.e("GroupActivity", "Error extracting memberId", e);
+            return null;
+        }
+    }
+
+    private void fetchGroupData() {
+        String url = BASE_URL + "/" + memberId;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                response -> displayGroupData(response),
+                error -> Log.e("GroupActivity", "Error fetching group data", error));
+
+        queue.add(request);
+    }
+
+    private void displayGroupData(JSONArray groups) {
+        try {
+            for (int i = 0; i < groups.length(); i++) {
+                JSONObject group = groups.getJSONObject(i);
+                String groupName = group.getString("title");
+                String groupDescription = group.getString("content");
+
+                // Display each group item
+                TextView groupItemView = new TextView(this);
+                groupItemView.setText(groupName + "\n" + groupDescription);
+                groupItemView.setTextSize(16);
+                groupItemView.setPadding(16, 16, 16, 16);
+                groupList.addView(groupItemView);
+
+                // Add click listener for group actions (leave, update, delete)
+                int meetingId = group.getInt("meetingId");
+                groupItemView.setOnClickListener(v -> {
+                    // Example action, replace with actual UI for options
+                    leaveGroup(meetingId);
+                });
+            }
+        } catch (JSONException e) {
+            Log.e("GroupActivity", "Error displaying group data", e);
+        }
+    }
+
+    private void leaveGroup(int meetingId) {
+        String url = BASE_URL + "/leave/" + meetingId + "?memberId=" + memberId;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                response -> Toast.makeText(this, "소모임을 탈퇴했습니다.", Toast.LENGTH_SHORT).show(),
+                error -> Log.e("GroupActivity", "Error leaving group", error));
+
+        queue.add(request);
+    }
+
+    private void updateGroup(int meetingId, String newTitle, String newContent, double latitude, double longitude, int maxMembers) {
+        String url = BASE_URL + "/update/" + meetingId + "?memberId=" + memberId;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("title", newTitle);
+            jsonBody.put("content", newContent);
+            jsonBody.put("latitude", latitude);
+            jsonBody.put("longitude", longitude);
+            jsonBody.put("maxMembers", maxMembers);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, jsonBody,
+                response -> Toast.makeText(this, "소모임 공고를 수정했습니다.", Toast.LENGTH_SHORT).show(),
+                error -> Log.e("GroupActivity", "Error updating group", error));
+
+        queue.add(request);
+    }
+
+    private void deleteGroup(int meetingId) {
+        String url = BASE_URL + "/delete/" + meetingId + "?memberId=" + memberId;
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                response -> Toast.makeText(this, "소모임을 삭제했습니다.", Toast.LENGTH_SHORT).show(),
+                error -> Log.e("GroupActivity", "Error deleting group", error));
+
+        queue.add(request);
     }
 }

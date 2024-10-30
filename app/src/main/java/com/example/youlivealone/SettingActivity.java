@@ -54,9 +54,6 @@ public class SettingActivity extends AppCompatActivity {
         switchChatNotifications = findViewById(R.id.switch_chat_notifications);
         switchLikeNotifications = findViewById(R.id.switch_like_notifications);
 
-        Log.d("SettingActivity", "Nickname Button: " + buttonSaveNickname);
-        Log.d("SettingActivity", "Email Button: " + buttonSaveEmail);
-        Log.d("SettingActivity", "Emergency Contact Button: " + buttonSaveEmergencyContact);
 
         // JWT 토큰에서 memberId 추출
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);

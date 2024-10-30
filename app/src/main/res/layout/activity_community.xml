@@ -35,6 +35,7 @@
 
     <!-- Written Posts Section -->
     <TextView
+        android:id="@+id/written_posts_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="작성한 게시글"
@@ -45,112 +46,21 @@
         app:layout_constraintTop_toBottomOf="@id/community_title"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- 작성한 게시글 리스트 -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_container2"
-        android:padding="16dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/community_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-    <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="오늘 경기 진짜..."
-            android:textColor="#000000"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="공감"
-            android:textColor="#BAA681"
-            android:layout_marginEnd="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="조회수"
-            android:textColor="#BAA681" />
-    </LinearLayout>
-
-    <!-- Written Comments Section -->
-    <TextView
-        android:id="@+id/written_comments_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="작성한 댓글"
-        android:textSize="18sp"
-        android:textColor="#BAA681"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Commented List -->
-    <LinearLayout
-        android:id="@+id/written_comment_list"
+        android:id="@+id/writtenPostList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/written_comments_title"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/written_posts_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- 댓글 아이템 뷰를 추가할 수 있습니다 -->
-
-
-
-
-    <!-- Individual comment item -->
-        <!-- Individual comment item -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/rounded_container"
-            android:padding="8dp">
-
-            <!-- First TextView -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="abcdefg"
-                android:textSize="16sp"
-                android:layout_marginEnd="16dp"
-                android:textColor="#000000" />
-
-            <!-- Divider Line -->
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#BAA681"
-                android:layout_marginEnd="16dp" />
-
-            <!-- Second TextView -->
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="오늘 경기 진짜..."
-                android:textColor="#BAA681"
-                android:gravity="end" />
-
-        </LinearLayout>
-
-
-        <!-- Add more comments in similar structure if needed -->
-    </LinearLayout>
-
-    <!-- 공감한 게시글 타이틀 -->
+    <!-- Liked Posts Section -->
     <TextView
         android:id="@+id/liked_posts_title"
         android:layout_width="wrap_content"
@@ -159,65 +69,24 @@
         android:textSize="18sp"
         android:textColor="#BAA681"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/written_comment_list"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp"/>
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/writtenCommentList"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- 공감한 게시글 리스트 -->
     <LinearLayout
-        android:id="@+id/liked_post_list"
+        android:id="@+id/likedPostList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_container2"
+        android:orientation="vertical"
         android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/liked_posts_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="16dp">
-
-        <!-- Main TextView for the post content -->
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingStart="16dp"
-            android:paddingTop="12dp"
-            android:text="~!@)*$@~...129"
-            android:textColor="#000000"
-            android:textSize="16sp" />
-
-        <!-- Container for "공감" and "조회수" on the right side -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end|center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="공감"
-                android:textColor="#BAA681"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="조회수"
-                android:textColor="#BAA681" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
+        android:padding="8dp" />
 
     <!-- Participating Chat Rooms Section -->
-
-
-
-    <!-- 참여하는 채팅방 Title -->
     <TextView
         android:id="@+id/participating_chatrooms_title"
         android:layout_width="wrap_content"
@@ -226,42 +95,49 @@
         android:textSize="18sp"
         android:textColor="#BAA681"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/liked_post_list"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp" />
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/likedPostList"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- 채팅방 아이템들 컨테이너 -->
+    <!-- 참여하는 채팅방 리스트 -->
     <LinearLayout
-        android:id="@+id/chatroom_items_container"
+        android:id="@+id/chatroomList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
+        android:orientation="vertical"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
         app:layout_constraintTop_toBottomOf="@id/participating_chatrooms_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- Written Comments Section -->
+    <TextView
+        android:id="@+id/written_comments_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="작성한 댓글"
+        android:textSize="18sp"
+        android:textColor="#BAA681"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/writtenPostList"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/writtenCommentList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/written_comments_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- 채팅방 아이템 예시 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EPL 리그\n회원 2,718명"
-            android:textSize="14sp"
-            android:textColor="#BAA681"
-            android:background="@drawable/rounded_container2"
-            android:padding="8dp"
-            android:layout_marginEnd="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="네카라배 취준팟\n회원 842명"
-            android:textSize="14sp"
-            android:textColor="#BAA681"
-            android:background="@drawable/rounded_container2"
-            android:padding="8dp"/>
+        <!-- Individual Comment Item Layout -->
+        <!-- Each comment item structure will be added dynamically through Java code -->
     </LinearLayout>
 
 
@@ -275,9 +151,7 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/check"
@@ -298,7 +172,6 @@
         android:background="@drawable/home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/check"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
 
@@ -321,4 +194,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
