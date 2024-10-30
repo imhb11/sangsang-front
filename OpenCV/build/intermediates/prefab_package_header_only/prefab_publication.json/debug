@@ -1,5 +1,5 @@
 {
-  "installationFolder": "/Users/domi/sangsang-front/OpenCV/build/intermediates/prefab_package/debug/prefab",
+  "installationFolder": "/Users/domi/Downloads/sangsang-front/OpenCV/build/intermediates/prefab_package/debug/prefab",
   "gradlePath": ":OpenCV",
   "packageInfo": {
     "packageName": "OpenCV",
@@ -8,7 +8,7 @@
     "modules": [
       {
         "moduleName": "opencv_jni_shared",
-        "moduleHeaders": "/Users/domi/sangsang-front/OpenCV/native/jni/include",
+        "moduleHeaders": "/Users/domi/Downloads/sangsang-front/OpenCV/native/jni/include",
         "moduleExportLibraries": [],
         "abis": []
       }

@@ -74,8 +74,8 @@
         app:layout_constraintHorizontal_chainStyle="packed"/>
 
     <!-- ScrollView for Posts -->
-    <ScrollView
-        android:id="@+id/scrollView"
+    <ListView
+        android:id="@+id/community_post_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/border"
@@ -85,107 +85,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/latest_button">
 
-        <!-- LinearLayout to hold posts -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-            <!-- Example Post -->
-
-            <!-- Example Post -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 3" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 4" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 5" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 6" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 7" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 8" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 9" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 10" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/border"
-                android:padding="16dp"
-                android:text="게시물 11" />
-
-            <!-- Add more posts here -->
-
-        </LinearLayout>
-    </ScrollView>
+    </ListView>
 
     <!-- Bottom Navigation -->
     <LinearLayout
