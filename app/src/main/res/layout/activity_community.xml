@@ -14,6 +14,7 @@
         android:layout_gravity="center"
         android:paddingBottom="16dp"
         android:text="소속 커뮤니티 확인"
+        android:textColor="#D7C2A4"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -23,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="작성한 게시글 확인"
+        android:backgroundTint="#D7C2A4"
         android:layout_marginBottom="16dp" />
 
     <!-- 작성한 댓글 확인 -->
@@ -31,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="작성한 댓글 확인"
+        android:backgroundTint="#D7C2A4"
         android:layout_marginBottom="16dp" />
 
     <!-- 공감한 게시글 확인 -->
@@ -39,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="공감한 게시글 확인"
+        android:backgroundTint="#D7C2A4"
         android:layout_marginBottom="16dp" />
 
     <!-- 참여하는 채팅방 확인 -->
@@ -47,5 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="참여하는 채팅방 확인"
+        android:backgroundTint="#D7C2A4"
         android:layout_marginBottom="16dp" />
 </LinearLayout>

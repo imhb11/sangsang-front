@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.7"
                 android:text="back"
+                android:textColor="#BAA681"
                 android:textSize="20dp" />
 
             <TextView
@@ -56,6 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="이름"
+                    android:textColor="#BAA681"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     />
@@ -67,6 +69,7 @@
                     android:layout_marginBottom="20dp"
                     android:ems="10"
                     android:hint=" 이름"
+                    android:background="@drawable/rounded_edittext_background"
                     android:inputType="textPersonName"
                     android:text="" />
 
@@ -76,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="아이디"
+                    android:textColor="#D7C2A4"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -86,6 +90,7 @@
                     android:layout_marginBottom="20dp"
                     android:ems="10"
                     android:hint=" 아이디"
+                    android:background="@drawable/rounded_edittext_background"
                     android:inputType="textPersonName"
                     android:text="" />
 
@@ -95,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="생년월일"
+                    android:textColor="#BAA681"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -111,6 +117,7 @@
                         android:layout_marginRight="10dp"
                         android:ems="10"
                         android:hint=" 년(4자)"
+                        android:background="@drawable/rounded_edittext_background"
                         android:inputType="textPersonName"
                         android:text="" />
                     <EditText
@@ -121,6 +128,7 @@
                         android:layout_marginRight="10dp"
                         android:ems="10"
                         android:hint=" 월"
+                        android:background="@drawable/rounded_edittext_background"
                         android:inputType="textPersonName"
                         android:text="" />
                     <EditText
@@ -130,6 +138,7 @@
                         android:layout_marginBottom="20dp"
                         android:ems="10"
                         android:hint=" 일"
+                        android:background="@drawable/rounded_edittext_background"
                         android:inputType="textPersonName"
                         android:text="" />
                 </LinearLayout>
@@ -140,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="비밀번호"
+                    android:textColor="#BAA681"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -151,6 +161,7 @@
                     android:layout_marginBottom="20dp"
                     android:ems="10"
                     android:hint=" 비밀번호"
+                    android:background="@drawable/rounded_edittext_background"
                     android:inputType="textPassword"
                     android:text="" />
 
@@ -160,6 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="비밀번호 확인"
+                    android:textColor="#BAA681"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -175,16 +187,18 @@
                         android:layout_marginBottom="20dp"
                         android:ems="10"
                         android:hint=" 비밀번호 다시 입력"
+                        android:background="@drawable/rounded_edittext_background"
                         android:inputType="textPassword"
                         android:text="" />
 
-                    <androidx.appcompat.widget.AppCompatButton
+                    <Button
                         android:id="@+id/pwcheckbutton"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
                         android:text="확인"
                         android:textColor="@color/white"
+                        android:backgroundTint="#BAA681"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -195,6 +209,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="이메일"
+                    android:textColor="#BAA681"
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
@@ -205,25 +220,39 @@
                     android:layout_marginBottom="20dp"
                     android:ems="10"
                     android:hint=" 이메일"
+                    android:background="@drawable/rounded_edittext_background"
                     android:inputType="textPersonName"
                     android:text="" />
+
+                <TextView
+                    android:id="@+id/nicknametext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="닉네임"
+                    android:textColor="#BAA681"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
                 <EditText
                     android:id="@+id/nickname"
                     android:layout_width="300dp"
                     android:layout_height="40dp"
                     android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_edittext_background"
                     android:ems="10"
                     android:hint="닉네임"
                     android:inputType="textPersonName"
                     android:text="" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <Button
                     android:id="@+id/signupbutton"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center"
                     android:text="회원가입"
+                    android:backgroundTint="#BAA681"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
