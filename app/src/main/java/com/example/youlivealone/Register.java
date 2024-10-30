@@ -58,7 +58,7 @@ public class Register extends AppCompatActivity {
             String Birthdate = birthdate.getText().toString();
             String Nickname = nickname.getText().toString();
 
-            String url = "http://54.79.1.3:8080/members/register";
+            String url = "http://15.165.92.121:8080/members/register";
 
             try {
                 JSONObject jsonBody = new JSONObject();

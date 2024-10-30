@@ -58,7 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -215,6 +214,7 @@
 
 
     <!-- Participating Chat Rooms Section -->
+
 
 
     <!-- 참여하는 채팅방 Title -->

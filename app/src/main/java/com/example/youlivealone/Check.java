@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youlivealone.Chat;
 import com.example.youlivealone.MainActivity;
@@ -44,7 +45,6 @@ public class Check extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check);
-
         calendarView = findViewById(R.id.calendarView);
         sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
 
@@ -70,8 +70,7 @@ public class Check extends AppCompatActivity {
             }
         });
 
-        // 버튼 작동 코드들
-        findViewById(R.id.map).setOnClickListener(v -> startActivity(new Intent(Check.this, Map.class)));
+        // 버튼 작동 코드
         findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(Check.this, Check.class)));
         findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(Check.this, MainActivity.class)));
         findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(Check.this, Chat.class)));
@@ -93,30 +92,23 @@ public class Check extends AppCompatActivity {
                     saveMoodToPreferences(date, selectedMood);
                     calendarView.addDecorator(new MoodDecorator(date, selectedMood)); // 데코레이터 추가
 
-                    // 기분 선택 후 POST 요청 보내기
-                    sendMoodCheckRequest(selectedMood);
+                    // 출석 체크 요청 보내기 (기분 데이터 제외)
+                    sendMoodCheckRequest();
+
                 });
         builder.create().show();
     }
 
-    // 기분 체크 POST 요청 보내기
-    private void sendMoodCheckRequest(String selectedMood) {
-        String url = "http://localhost:8080/check?memberId=" + memberId;
-
-        // JSON 객체 생성
-        JSONObject jsonBody = new JSONObject();
-        try {
-            jsonBody.put("mood", selectedMood);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    // 기분 체크 POST 요청 보내기 (StringRequest로 문자열 응답 받기)
+    private void sendMoodCheckRequest() {
+        String url = "http://15.165.92.121:8080/attendance/check?memberId=" + memberId;
 
         // POST 요청 생성
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
-                new Response.Listener<JSONObject>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(Check.this, "출석 체크 완료!", Toast.LENGTH_SHORT).show();
+                    public void onResponse(String response) {
+                        Toast.makeText(Check.this, "출석 체크 완료: " + response, Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -131,11 +123,18 @@ public class Check extends AppCompatActivity {
                 headers.put("Content-Type", "application/json");
                 return headers;
             }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return "{}".getBytes();  // 빈 JSON 객체 전송
+            }
         };
 
         // 요청 큐에 추가
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(stringRequest);
     }
+
+
 
     // MoodDecorator 클래스
     private class MoodDecorator implements DayViewDecorator {

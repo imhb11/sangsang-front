@@ -36,8 +36,8 @@ public class community_category extends AppCompatActivity {
     private List<Post> postItems = new ArrayList<>();
 
 
-    private static final String HOT_POSTS_URL = "http://54.79.1.3:8080/categories/{categoryId}/posts";
-    private static final String POSTS_URL = "http://54.79.1.3:8080/categories/{categoryId}/posts";
+    private static final String HOT_POSTS_URL = "http://15.165.92.121:8080/categories/{categoryId}/posts";
+    private static final String POSTS_URL = "http://15.165.92.121:8080/categories/{categoryId}/posts";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +202,8 @@ public class community_category extends AppCompatActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
+//                                String postId = post.getString("postId"); // postId 가져오기
+
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
@@ -239,6 +241,8 @@ public class community_category extends AppCompatActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
+//                                String postId = post.getString("postId"); // postId 가져오기
+
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
