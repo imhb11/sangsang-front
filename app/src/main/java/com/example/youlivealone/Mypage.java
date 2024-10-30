@@ -35,6 +35,18 @@ public class Mypage extends AppCompatActivity {
         nicknameTextView = findViewById(R.id.nickname);
         pointsTextView = findViewById(R.id.points);
 
+        findViewById(R.id.settings_icon).setOnClickListener(v -> openSettingsScreen());
+        findViewById(R.id.menu_item_community).setOnClickListener(v -> {
+            Intent intent = new Intent(Mypage.this, CommunityActivity.class);
+            startActivity(intent);
+        });
+
+        findViewById(R.id.menu_item_group).setOnClickListener(v -> {
+            Intent intent = new Intent(Mypage.this, GroupActivity.class);
+            startActivity(intent);
+        });
+
+
         // SharedPreferences에서 JWT 토큰 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
@@ -130,6 +142,8 @@ public class Mypage extends AppCompatActivity {
             }
         });
 
+
+
         // 기존 버튼 작동 코드
         findViewById(R.id.check).setOnClickListener(v -> {
             startActivity(new Intent(Mypage.this, Check.class));
@@ -146,5 +160,10 @@ public class Mypage extends AppCompatActivity {
         findViewById(R.id.mypage).setOnClickListener(v -> {
             startActivity(new Intent(Mypage.this, Mypage.class));
         });
+    }
+    //설정이동 버튼
+    private void openSettingsScreen() {
+        Intent intent = new Intent(Mypage.this, SettingActivity.class);
+        startActivity(intent);
     }
 }
