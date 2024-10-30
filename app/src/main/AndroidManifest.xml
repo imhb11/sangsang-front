@@ -41,9 +41,9 @@
         <activity android:name=".Meeting_detail" />
         <activity android:name=".Meeting_write" />
         <activity android:name=".AddMessageBoard" />
-        <activity android:name=".AccountSettingsActivity"/>
+
         <receiver android:name=".NotificationReceiver" />
-        <activity android:name=".NotificationSettingsActivity"/>
+
         <activity android:name=".CommunityActivity"/>
         <activity android:name=".GroupActivity"/>
         <activity android:name=".PurchaseActivity"/>
@@ -52,6 +52,7 @@
         <activity android:name=".ViewCommentsActivity"/>
         <activity android:name=".ViewLikedPostsActivity"/>
         <activity android:name=".ViewPostsActivity"/>
+
 
         <activity android:name=".Login"
             android:exported="true">
