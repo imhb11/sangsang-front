@@ -3,6 +3,7 @@ package com.example.youlivealone;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,9 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
     private RecyclerView chatRoomRecyclerView;
     private ChatRoomAdapter chatRoomAdapter;
     private ArrayList<ChatRoom> chatRoomList;
+    private static final String CHAT_ROOMS_URL = "http://15.165.92.121:8080/chat/rooms";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +43,64 @@ public class RealtimeChatActivity extends AppCompatActivity {
         chatRoomRecyclerView = findViewById(R.id.chatRoomRecyclerView);
         ImageButton addChatRoomButton = findViewById(R.id.addChatRoomButton);
 
+
         chatRoomList = new ArrayList<>();
         chatRoomAdapter = new ChatRoomAdapter(chatRoomList);
         chatRoomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRoomRecyclerView.setAdapter(chatRoomAdapter);
 
         addChatRoomButton.setOnClickListener(v -> showAddChatRoomDialog());
+
+        // 채팅방 리스트 불러오기
+        loadChatRooms();
+    }
+
+    private void loadChatRooms() {
+        int categoryId = getCategoryIdFromPreferences();
+        if (categoryId == -1) {
+            Toast.makeText(this, "카테고리 ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = CHAT_ROOMS_URL + "?category=" + categoryId;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    chatRoomList.clear();  // 기존 리스트 초기화
+                    parseChatRooms(response);
+                    chatRoomAdapter.notifyDataSetChanged();
+                },
+                error -> {
+                    Log.e("RealtimeChatActivity", "채팅방 목록 불러오기 실패", error);
+                    Toast.makeText(this, "채팅방 목록을 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show();
+                }
+        );
+        queue.add(jsonArrayRequest);
+    }
+
+    private void parseChatRooms(JSONArray response) {
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject roomObject = response.getJSONObject(i);
+                String name = roomObject.getString("name");
+                String description = roomObject.getString("description");
+                int maxParticipants = roomObject.getInt("maxParticipants");
+                int category = roomObject.getInt("category");
+                chatRoomList.add(new ChatRoom(name, description, maxParticipants, category));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("RealtimeChatActivity", "JSON 파싱 오류", e);
+        }
+    }
+
+    //카테고리 아이디 가져오기
+    private int getCategoryIdFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return sharedPreferences.getInt("categoryId", -1); // 기본값 -1, 카테고리 ID가 없는 경우
     }
 
     private void showAddChatRoomDialog() {
