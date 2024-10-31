@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -166,6 +167,12 @@ public class community_category extends AppCompatActivity {
         });
 
         //버튼 작동코드들
+        //버튼 클릭시
+        TextView liveTalkButton = findViewById(R.id.textView14);
+        liveTalkButton.setOnClickListener(v -> {
+            Intent intent = new Intent(community_category.this, RealtimeChatActivity.class);
+            startActivity(intent);
+        });
 
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(community_category.this, Check.class);

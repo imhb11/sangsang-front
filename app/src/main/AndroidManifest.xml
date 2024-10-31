@@ -53,6 +53,8 @@
         <activity android:name=".ViewLikedPostsActivity"/>
         <activity android:name=".ViewPostsActivity"/>
 
+        <activity android:name=".RealtimeChatActivity" />
+
 
         <activity android:name=".Login"
             android:exported="true">

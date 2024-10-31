@@ -2,14 +2,14 @@
 -- The CXX compiler identification is Clang 14.0.6
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
--- Check for working C compiler: /Users/domi/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang - skipped
+-- Check for working C compiler: E:/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe - skipped
 -- Detecting C compile features
 -- Detecting C compile features - done
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /Users/domi/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ - skipped
+-- Check for working CXX compiler: E:/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/domi/sangsang-front/OpenCV/.cxx/Debug/2x6j294r/x86_64
+-- Build files have been written to: E:/workspace/sangsang-all/OpenCV/.cxx/Debug/2x6j294r/x86_64
