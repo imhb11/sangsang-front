@@ -1,6 +1,7 @@
 package com.example.youlivealone;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -81,6 +82,14 @@ public class RealtimeChatActivity extends AppCompatActivity {
     private void createChatRoom(String name, String description, int maxParticipants, String category) {
         String url = "http://15.165.92.121:8080/chat/room"; // 서버 주소 설정
 
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String token = sharedPreferences.getString("jwtToken", null);
+
+        if (token == null) {
+            Toast.makeText(getApplicationContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         try {
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("name", name);
@@ -106,7 +115,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
                 public Map<String, String> getHeaders() {
                     Map<String, String> headers = new HashMap<>();
                     headers.put("Content-Type", "application/json");
-                    // headers.put("Authorization", "Bearer " + token); // 필요 시 추가
+                    headers.put("Authorization", "Bearer " + token); // JWT 토큰을 헤더에 추가
                     return headers;
                 }
             };
