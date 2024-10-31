@@ -5,12 +5,12 @@ public class ChatRoom {
     private String name;
     private String description;
     private int maxParticipants;
-    private String category;
+    private int  category;
     private int participantCount; // 현재 채팅방 인원
     private String lastMessage;   // 마지막 메시지
     private String lastMessageTime;    // 마지막 메시지 시간
 
-    public ChatRoom(String name, String description, int maxParticipants, String category) {
+    public ChatRoom(String name, String description, int maxParticipants, int category) {
         this.name = name;
         this.description = description;
         this.maxParticipants = maxParticipants;
@@ -25,7 +25,7 @@ public class ChatRoom {
     public String getName() { return name; }
     public String getDescription() { return description; }
     public int getMaxParticipants() { return maxParticipants; }
-    public String getCategory() { return category; }
+    public int getCategory() { return category; }
     public int getParticipantCount() { return participantCount; }
     public String getLastMessage() { return lastMessage; }
     public String getLastMessageTime() { return lastMessageTime; }

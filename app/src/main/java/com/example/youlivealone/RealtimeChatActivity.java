@@ -64,22 +64,30 @@ public class RealtimeChatActivity extends AppCompatActivity {
                 Toast.makeText(this, "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show();
             } else {
                 //이건 로컬로 채팅방 add가 잘 이루어지는 지 확인을 위한 코드
-//                chatRoomList.add(new ChatRoom(roomTitle, roomDescription, Integer.parseInt(maxParticipants), "농구"));
-//                chatRoomAdapter.notifyDataSetChanged();
+////                chatRoomList.add(new ChatRoom(roomTitle, roomDescription, Integer.parseInt(maxParticipants), "농구"));
+////                chatRoomAdapter.notifyDataSetChanged();
+////                dialog.dismiss();
+//                //카테고리도 가기는 하는 듯
+//                // POST 요청 보내는 메서드 호출
+//                createChatRoom(roomTitle, roomDescription, Integer.parseInt(maxParticipants), "농구");
 //                dialog.dismiss();
+                // SharedPreferences에서 저장된 카테고리 ID를 가져옵니다.
+                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                int categoryId = sharedPreferences.getInt("categoryId", -1); // 기본값 -1은 ID가 없을 경우를 대비한 것입니다.
 
-
-                //카테고리도 가기는 하는 듯
-                // POST 요청 보내는 메서드 호출
-                createChatRoom(roomTitle, roomDescription, Integer.parseInt(maxParticipants), "농구");
-                dialog.dismiss();
+                if (categoryId == -1) {
+                    Toast.makeText(this, "카테고리를 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
+                } else {
+                    createChatRoom(roomTitle, roomDescription, Integer.parseInt(maxParticipants), categoryId);
+                    dialog.dismiss();
+                }
             }
         });
 
         dialog.show();
     }
 
-    private void createChatRoom(String name, String description, int maxParticipants, String category) {
+    private void createChatRoom(String name, String description, int maxParticipants, int category) {
         String url = "http://15.165.92.121:8080/chat/room"; // 서버 주소 설정
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
