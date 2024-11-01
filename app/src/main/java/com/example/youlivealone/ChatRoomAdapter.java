@@ -1,5 +1,7 @@
 package com.example.youlivealone;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,12 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
 
     //백엔드에서 해당 리스트에 전체 채팅방 객체에 대해서 list로 줘야한다
     private ArrayList<ChatRoom> chatRooms;
+    private Context context;
 
-    public ChatRoomAdapter(ArrayList<ChatRoom> chatRooms) {
+    public ChatRoomAdapter(ArrayList<ChatRoom> chatRooms, Context context) {
         this.chatRooms = chatRooms;
+        this.context = context;
     }
-
     @NonNull
     @Override
     public ChatRoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,6 +39,12 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
         holder.chatRoomTitle.setText(chatRoom.getName());
         holder.participantCount.setText("참여자 수: " + chatRoom.getParticipantCount());
         holder.lastMessageTime.setText(chatRoom.getLastMessageTime()); // 마지막 메시지 시간 표시
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ChatRoomActivity.class);
+            intent.putExtra("chatRoomId", chatRoom.getId());
+            context.startActivity(intent);
+        });
 
     }
 

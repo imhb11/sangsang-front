@@ -32,6 +32,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
 
     private RecyclerView chatRoomRecyclerView;
     private ChatRoomAdapter chatRoomAdapter;
+    private PopularChatRoomAdapter popularChatRoomAdapter;
     private ArrayList<ChatRoom> chatRoomList;
     private static final String CHAT_ROOMS_URL = "http://15.165.92.121:8080/chat/rooms";
 
@@ -45,7 +46,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
 
 
         chatRoomList = new ArrayList<>();
-        chatRoomAdapter = new ChatRoomAdapter(chatRoomList);
+        chatRoomAdapter = new ChatRoomAdapter(chatRoomList, this);
         chatRoomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRoomRecyclerView.setAdapter(chatRoomAdapter);
 
@@ -62,7 +63,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
             return;
         }
 
-        String url = CHAT_ROOMS_URL + "?category=" + categoryId;
+        String url = CHAT_ROOMS_URL + "?categoryId=" + categoryId;
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
@@ -85,11 +86,25 @@ public class RealtimeChatActivity extends AppCompatActivity {
         try {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject roomObject = response.getJSONObject(i);
+
+                int id = roomObject.getInt("id"); // 서버 응답에서 id 받아옴
                 String name = roomObject.getString("name");
                 String description = roomObject.getString("description");
                 int maxParticipants = roomObject.getInt("maxParticipants");
-                int category = roomObject.getInt("category");
-                chatRoomList.add(new ChatRoom(name, description, maxParticipants, category));
+                //int category = roomObject.getInt("category");
+                int participantCount = roomObject.getInt("participantCount");
+                //String craetorId = roomObject.getString("creatorId");
+                // category가 JSONObject로 들어올 때 안전하게 접근
+                int categoryId = -1; // 기본값 설정
+                if (roomObject.has("category")) {
+                    JSONObject categoryObject = roomObject.getJSONObject("category");
+                    categoryId = categoryObject.getInt("id"); // category의 id를 추출
+                }
+
+                ChatRoom chatRoom = new ChatRoom(id, name, description, maxParticipants, categoryId);
+                chatRoom.setParticipantCount(participantCount);
+
+                chatRoomList.add(chatRoom);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -160,7 +175,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
             jsonBody.put("name", name);
             jsonBody.put("description", description);
             jsonBody.put("maxParticipants", maxParticipants);
-            jsonBody.put("category", category);
+            jsonBody.put("categoryId", category);
 
             StringRequest stringRequest = new StringRequest(
                     Request.Method.POST, url,
@@ -169,8 +184,11 @@ public class RealtimeChatActivity extends AppCompatActivity {
                         chatRoomList.add(new ChatRoom(name, description, maxParticipants, category));
                         chatRoomAdapter.notifyDataSetChanged();
                     },
-                    error -> Toast.makeText(getApplicationContext(), "채팅방 생성 실패", Toast.LENGTH_LONG).show()
-            ) {
+                    error -> {
+                        // 서버 오류 메시지 로그 출력
+                        Log.e("createChatRoom", "서버 오류 발생: " + error.getMessage());
+                        Toast.makeText(getApplicationContext(), "채팅방 생성 실패", Toast.LENGTH_LONG).show();
+                    }            ) {
                 @Override
                 public byte[] getBody() {
                     return jsonBody.toString().getBytes();

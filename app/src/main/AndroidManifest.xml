@@ -54,6 +54,8 @@
         <activity android:name=".ViewPostsActivity"/>
 
         <activity android:name=".RealtimeChatActivity" />
+        <activity android:name=".ChatRoomActivity" />
+
 
 
         <activity android:name=".Login"
