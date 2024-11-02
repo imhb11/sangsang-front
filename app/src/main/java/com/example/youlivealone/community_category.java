@@ -33,7 +33,7 @@ public class community_category extends AppCompatActivity {
     private ChatRoomAdapter chatRoomAdapter; // 채팅방 어댑터
     private ArrayList<ChatRoom> chatRooms = new ArrayList<>(); // 채팅방 목록 데이터
 
-    private static final String CHAT_ROOMS_URL_BASE = "http://15.165.92.121:8080/rooms";    //
+    private static final String CHAT_ROOMS_URL_BASE = "http://15.165.92.121:8080/chat/rooms";    //
 
 
     private ListView hotlist;
@@ -309,12 +309,21 @@ public class community_category extends AppCompatActivity {
                     Log.d("Response", response.toString());
                     try {
                         for (int i = 0; i < response.length(); i++) {
-                            JSONObject room = response.getJSONObject(i);
-                            int id = room.getInt("id");
-                            String name = room.getString("name");
-                            String description = room.getString("description");
-                            int maxParticipants = room.getInt("maxParticipants");
-                            int participantCount = room.getInt("participantCount");
+                            JSONObject roomObject = response.getJSONObject(i);
+
+                            int id = roomObject.getInt("id"); // 서버 응답에서 id 받아옴
+                            String name = roomObject.getString("name");
+                            String description = roomObject.getString("description");
+                            int maxParticipants = roomObject.getInt("maxParticipants");
+                            //int category = roomObject.getInt("category");
+                            int participantCount = roomObject.getInt("participantCount");
+                            //String craetorId = roomObject.getString("creatorId");
+                            // category가 JSONObject로 들어올 때 안전하게 접근
+                           // int categoryId = -1; // 기본값 설정
+//                            if (roomObject.has("category")) {
+//                                JSONObject categoryObject = roomObject.getJSONObject("category");
+//                                categoryId = categoryObject.getInt("id"); // category의 id를 추출
+//                            }
 
                             ChatRoom chatRoom = new ChatRoom(id, name, description, maxParticipants, categoryId);
                             chatRoom.setParticipantCount(participantCount);
@@ -327,7 +336,8 @@ public class community_category extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    Log.e("community_category", "Error loading chat rooms", error);
+                    Log.e("community_category", "Error loading chat rooms: " + error.networkResponse.statusCode);
+                    Log.e("community_category", "Error details: " + new String(error.networkResponse.data));
                     Toast.makeText(community_category.this, "Error loading chat rooms", Toast.LENGTH_SHORT).show();
                 }
         );
