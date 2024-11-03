@@ -87,7 +87,7 @@ public class Smart extends AppCompatActivity {
     }
 
     private void onIngredientsRecognized(List<String> ingredients) {
-        recipeFetcher.fetchRecipe(ingredients, "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", new Callback() {
+        //recipeFetcher.fetchRecipe(ingredients, "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", new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> ((TextView) findViewById(R.id.recipeTextView)).setText("Error: " + e.getMessage()));
