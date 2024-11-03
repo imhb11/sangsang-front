@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,21 +14,12 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.youlivealone.Chat;
-import com.example.youlivealone.MainActivity;
-import com.example.youlivealone.Mypage;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,23 +27,21 @@ import java.util.Map;
 public class Check extends AppCompatActivity {
 
     private MaterialCalendarView calendarView;
-    private Map<CalendarDay, String> moodMap = new HashMap<>(); // 날짜와 기분 매핑
     private SharedPreferences sharedPreferences;
-    private String jwtToken;  // JWT 토큰을 저장할 변수
-    private String memberId = "your_member_id"; // 실제 memberId 값 설정
-    private RequestQueue requestQueue;  // Volley의 요청 큐
+    private String jwtToken;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check);
         calendarView = findViewById(R.id.calendarView);
-        sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
 
-        // JWT 토큰 가져오기 (예시: SharedPreferences에서 가져온다고 가정)
-        jwtToken = sharedPreferences.getString("jwt_token", "");
+        // SharedPreferences에서 JWT 토큰 및 저장된 기분 데이터 가져오기
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        jwtToken = sharedPreferences.getString("jwtToken", null);
 
-        // 이전에 저장된 이모티콘 상태 복원
+        // 저장된 기분 데이터를 불러와 캘린더에 표시
         loadMoodsFromPreferences();
 
         // Volley 요청 큐 초기화
@@ -60,90 +50,129 @@ public class Check extends AppCompatActivity {
         // 오늘 날짜 가져오기
         CalendarDay today = CalendarDay.today();
 
-        // 날짜 선택 리스너 설정
+        // 날짜 선택 리스너 설정 (오늘 날짜 클릭 시 출석 체크 요청 전송)
         calendarView.setOnDateChangedListener((widget, date, selected) -> {
-            // 오늘 날짜를 터치했을 때만 이모티콘 선택 다이얼로그 표시
             if (date.equals(today)) {
-                showMoodDialog(date);
+                showMoodSelectionDialog(today); // 기분 선택 다이얼로그 표시
             } else {
                 Toast.makeText(Check.this, "오늘 날짜만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // 버튼 작동 코드
+        // 하단 버튼 기능 설정
         findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(Check.this, Check.class)));
         findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(Check.this, MainActivity.class)));
         findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(Check.this, Chat.class)));
         findViewById(R.id.mypage).setOnClickListener(v -> startActivity(new Intent(Check.this, Mypage.class)));
     }
 
-    // 이모티콘 선택 다이얼로그 표시
-    private void showMoodDialog(CalendarDay date) {
-        String[] moodEmojis = {"😀 행복", "😐 보통", "😢 슬픔", "😠 화남"};
+    // 기분 선택 다이얼로그를 표시하는 메서드
+    private void showMoodSelectionDialog(CalendarDay date) {
+        String[] moods = {"😀 행복", "😐 보통", "😢 슬픔", "😠 화남"};
+        int[] moodImages = {R.drawable.happy, R.drawable.just, R.drawable.sad, R.drawable.angry};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Check.this);
         builder.setTitle("오늘의 기분을 선택하세요")
-                .setItems(moodEmojis, (dialog, which) -> {
-                    String selectedMood = moodEmojis[which];
-                    Toast.makeText(Check.this, "선택된 기분: " + selectedMood, Toast.LENGTH_SHORT).show();
+                .setItems(moods, (dialog, which) -> {
+                    // 선택한 기분을 SharedPreferences에 저장
+                    saveMoodToPreferences(date, moods[which], moodImages[which]);
 
-                    // 선택된 기분을 맵에 저장하고 SharedPreferences에 저장
-                    moodMap.put(date, selectedMood);
-                    saveMoodToPreferences(date, selectedMood);
-                    calendarView.addDecorator(new MoodDecorator(date, selectedMood)); // 데코레이터 추가
+                    // 선택한 기분 이미지로 데코레이터 설정
+                    calendarView.addDecorator(new MoodDecorator(date, moodImages[which]));
 
-                    // 출석 체크 요청 보내기 (기분 데이터 제외)
-                    sendMoodCheckRequest();
-
+                    // 서버에 출석 체크 요청 보내기
+                    sendAttendanceCheckRequest();
                 });
         builder.create().show();
     }
 
-    // 기분 체크 POST 요청 보내기 (StringRequest로 문자열 응답 받기)
-    private void sendMoodCheckRequest() {
-        String url = "http://15.165.92.121:8080/attendance/check?memberId=" + memberId;
+    // 출석 체크 요청을 보내는 메서드
+    private void sendAttendanceCheckRequest() {
+        String url = "http://15.165.92.121:8080/attendance/check";
 
-        // POST 요청 생성
+        // JWT 토큰이 존재하는지 확인
+        if (jwtToken == null) {
+            Toast.makeText(Check.this, "로그인 후 출석 체크가 가능합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Volley를 사용하여 POST 요청을 보내기
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(Check.this, "출석 체크 완료: " + response, Toast.LENGTH_SHORT).show();
+                response -> {
+                    // 서버 응답 성공 시 처리
+                    Toast.makeText(Check.this, "출석 체크 완료: " + response, Toast.LENGTH_SHORT).show();
+                },
+                error -> {
+                    // 오류 발생 시 처리
+                    Log.e("CheckActivity", "출석 체크 실패: " + error.getMessage());
+                    if (error.networkResponse != null) {
+                        int statusCode = error.networkResponse.statusCode;
+                        String errorMsg = new String(error.networkResponse.data);
+                        Log.e("CheckActivity", "상태 코드: " + statusCode);
+                        Log.e("CheckActivity", "서버 응답 메시지: " + errorMsg);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(Check.this, "출석 체크 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
+                    Toast.makeText(Check.this, "출석 체크 실패", Toast.LENGTH_SHORT).show();
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + jwtToken); // JWT 토큰 추가
-                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + jwtToken); // JWT 토큰을 헤더에 추가
                 return headers;
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return "{}".getBytes();  // 빈 JSON 객체 전송
+            public byte[] getBody() {
+                return null;
             }
         };
 
-        // 요청 큐에 추가
+        // 요청을 요청 큐에 추가
         requestQueue.add(stringRequest);
     }
 
+    // 감정 데이터를 SharedPreferences에 저장하는 메서드
+    private void saveMoodToPreferences(CalendarDay date, String mood, int moodImageRes) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String key = date.getYear() + "_" + date.getMonth() + "_" + date.getDay();
+        editor.putString(key + "_mood", mood);
+        editor.putInt(key + "_moodImageRes", moodImageRes);
+        editor.apply();
+    }
 
+    // SharedPreferences에서 감정 데이터를 불러와 캘린더에 표시하는 메서드
+    private void loadMoodsFromPreferences() {
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            String key = entry.getKey();
+            String[] dateParts = key.split("_");
 
-    // MoodDecorator 클래스
+            if (dateParts.length == 3) { // 키가 날짜 형식인 경우만 처리
+                try {
+                    int year = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int day = Integer.parseInt(dateParts[2]);
+                    CalendarDay date = CalendarDay.from(year, month, day);
+                    int moodImageRes = sharedPreferences.getInt(key + "_moodImageRes", 0);
+
+                    // 데코레이터 추가하여 캘린더에 감정 이미지 표시
+                    if (moodImageRes != 0) {
+                        calendarView.addDecorator(new MoodDecorator(date, moodImageRes));
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("CheckActivity", "잘못된 날짜 형식 키: " + key);
+                }
+            }
+        }
+    }
+
+    // 감정 이미지를 추가하는 MoodDecorator 클래스
     private class MoodDecorator implements DayViewDecorator {
         private final CalendarDay date;
-        private final String mood;
+        private final int moodImageRes;
 
-        public MoodDecorator(CalendarDay date, String mood) {
+        public MoodDecorator(CalendarDay date, int moodImageRes) {
             this.date = date;
-            this.mood = mood;
+            this.moodImageRes = moodImageRes;
         }
 
         @Override
@@ -153,53 +182,8 @@ public class Check extends AppCompatActivity {
 
         @Override
         public void decorate(DayViewFacade view) {
-            // 선택된 기분에 따라 이미지 리소스를 설정
-            int drawableId = getDrawableForMood(mood);
-            if (drawableId != 0) {
-                Drawable drawable = ContextCompat.getDrawable(Check.this, drawableId);
-                view.setBackgroundDrawable(drawable); // 배경에 이미지 설정
-            }
-        }
-
-        // 기분에 따라 알맞은 drawable 리소스 ID 반환
-        private int getDrawableForMood(String mood) {
-            switch (mood) {
-                case "😀 행복":
-                    return R.drawable.happy;
-                case "😐 보통":
-                    return R.drawable.just;
-                case "😢 슬픔":
-                    return R.drawable.sad;
-                case "😠 화남":
-                    return R.drawable.angry;
-                default:
-                    return 0; // 기본값 (해당 없을 경우)
-            }
-        }
-    }
-
-    // SharedPreferences에 기분 저장
-    private void saveMoodToPreferences(CalendarDay date, String mood) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String key = date.getYear() + "_" + date.getMonth() + "_" + date.getDay();
-        editor.putString(key, mood);
-        editor.apply();
-    }
-
-    // SharedPreferences에서 기분 복원
-    private void loadMoodsFromPreferences() {
-        Map<String, ?> allEntries = sharedPreferences.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            String[] dateParts = entry.getKey().split("_");
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
-            CalendarDay date = CalendarDay.from(year, month, day);
-            String mood = (String) entry.getValue();
-
-            // 복원된 기분을 맵에 저장하고 데코레이터 추가
-            moodMap.put(date, mood);
-            calendarView.addDecorator(new MoodDecorator(date, mood));
+            Drawable drawable = ContextCompat.getDrawable(Check.this, moodImageRes);
+            view.setBackgroundDrawable(drawable);
         }
     }
 }
