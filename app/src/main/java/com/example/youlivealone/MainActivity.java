@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
         // 이미지 슬라이드 코드
         ViewPager2 viewPager2 = mBinding.viewPager;
         List<Integer> images = Arrays.asList(
-                R.drawable.image1,
-                R.drawable.image2,
-                R.drawable.image3,
-                R.drawable.image4
+                R.drawable.a,
+                R.drawable.a2,
+                R.drawable.a3,
+                R.drawable.a4
         );
         ImageAdapter adapter = new ImageAdapter(images, viewPager2);
         viewPager2.setAdapter(adapter);
