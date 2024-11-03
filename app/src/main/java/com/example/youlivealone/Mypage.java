@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +26,7 @@ public class Mypage extends AppCompatActivity {
 
     private TextView nicknameTextView;
     private TextView pointsTextView;
-    private String memberId;
+    private String userId; // 실제 userId를 저장하기 위한 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,6 @@ public class Mypage extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         // SharedPreferences에서 JWT 토큰 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
@@ -54,14 +54,15 @@ public class Mypage extends AppCompatActivity {
         if (token != null) {
             Log.d("JWTToken", "Loaded JWT Token: " + token);
 
-            // JWT 객체 생성
+            // JWT 객체 생성 및 "sub" 클레임을 userId로 사용
             JWT jwt = new JWT(token);
-
-            // "sub" 클레임을 memberId로 사용
-            memberId = jwt.getClaim("sub").asString();
-            Log.d("Mypage", "Extracted memberId (from sub): " + memberId);
+            userId = jwt.getClaim("sub").asString();
+            Log.d("Mypage", "Extracted userId (from sub): " + userId);
         } else {
             Log.e("Mypage", "JWT Token is null");
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
         // ExecutorService를 통해 네트워크 작업을 백그라운드에서 실행
@@ -70,10 +71,10 @@ public class Mypage extends AppCompatActivity {
 
         // 닉네임 가져오기
         executorService.execute(() -> {
-            if (memberId != null) {
+            if (userId != null) {
                 try {
                     // 닉네임 조회 API 호출
-                    URL nicknameUrl = new URL("http://15.165.92.121:8080/mypage/nickname/" + memberId);
+                    URL nicknameUrl = new URL("http://15.165.92.121:8080/mypage/nickname/" + userId);
                     HttpURLConnection nicknameConnection = (HttpURLConnection) nicknameUrl.openConnection();
                     nicknameConnection.setRequestMethod("GET");
 
@@ -101,16 +102,16 @@ public class Mypage extends AppCompatActivity {
                     Log.e("NicknameError", "Error fetching nickname", e);
                 }
             } else {
-                Log.e("Mypage", "memberId is null, cannot fetch nickname.");
+                Log.e("Mypage", "userId is null, cannot fetch nickname.");
             }
         });
 
         // 포인트 가져오기
         executorService.execute(() -> {
-            if (memberId != null) {
+            if (userId != null) {
                 try {
                     // 포인트 조회 API 호출
-                    URL pointsUrl = new URL("http://15.165.92.121:8080/mypage/points/" + memberId);
+                    URL pointsUrl = new URL("http://15.165.92.121:8080/mypage/points/" + userId);
                     HttpURLConnection pointsConnection = (HttpURLConnection) pointsUrl.openConnection();
                     pointsConnection.setRequestMethod("GET");
 
@@ -138,11 +139,9 @@ public class Mypage extends AppCompatActivity {
                     Log.e("PointsError", "Error fetching points", e);
                 }
             } else {
-                Log.e("Mypage", "memberId is null, cannot fetch points.");
+                Log.e("Mypage", "userId is null, cannot fetch points.");
             }
         });
-
-
 
         // 기존 버튼 작동 코드
         findViewById(R.id.check).setOnClickListener(v -> {
@@ -161,7 +160,8 @@ public class Mypage extends AppCompatActivity {
             startActivity(new Intent(Mypage.this, Mypage.class));
         });
     }
-    //설정이동 버튼
+
+    // 설정 화면 이동 메서드
     private void openSettingsScreen() {
         Intent intent = new Intent(Mypage.this, SettingActivity.class);
         startActivity(intent);
