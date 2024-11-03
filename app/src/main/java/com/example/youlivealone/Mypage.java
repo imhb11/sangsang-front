@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -25,7 +27,7 @@ public class Mypage extends AppCompatActivity {
 
     private TextView nicknameTextView;
     private TextView pointsTextView;
-    private String memberId;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,124 +48,134 @@ public class Mypage extends AppCompatActivity {
             startActivity(intent);
         });
 
-
-        // SharedPreferences에서 JWT 토큰 가져오기
+        // JWT 토큰에서 userId 추출
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
 
         if (token != null) {
-            Log.d("JWTToken", "Loaded JWT Token: " + token);
-
-            // JWT 객체 생성
             JWT jwt = new JWT(token);
-
-            // "sub" 클레임을 memberId로 사용
-            memberId = jwt.getClaim("sub").asString();
-            Log.d("Mypage", "Extracted memberId (from sub): " + memberId);
+            userId = jwt.getClaim("sub").asString();
+            Log.d("Mypage", "Extracted userId (from sub): " + userId);
         } else {
-            Log.e("Mypage", "JWT Token is null");
+            Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
-        // ExecutorService를 통해 네트워크 작업을 백그라운드에서 실행
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Handler mainHandler = new Handler(Looper.getMainLooper());
+        // userId로 MyPage 업데이트 요청
+        updateMypageFromId(userId);
 
-        // 닉네임 가져오기
-        executorService.execute(() -> {
-            if (memberId != null) {
-                try {
-                    // 닉네임 조회 API 호출
-                    URL nicknameUrl = new URL("http://15.165.92.121:8080/mypage/nickname/" + memberId);
-                    HttpURLConnection nicknameConnection = (HttpURLConnection) nicknameUrl.openConnection();
-                    nicknameConnection.setRequestMethod("GET");
+        // 닉네임과 포인트 가져오기
+        fetchNickname();
+        fetchPoints();
 
-                    int responseCode = nicknameConnection.getResponseCode();
-                    if (responseCode == 200) { // 성공 응답일 경우
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(nicknameConnection.getInputStream()));
-                        StringBuilder result = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            result.append(line);
-                        }
-                        reader.close();
-
-                        // JSON 파싱
-                        JSONObject nicknameJson = new JSONObject(result.toString());
-                        String nickname = nicknameJson.getString("nickname");
-
-                        // UI 업데이트 (UI 스레드에서 실행)
-                        mainHandler.post(() -> nicknameTextView.setText(nickname));
-                    } else {
-                        Log.e("NicknameAPI", "Failed to fetch nickname: " + responseCode);
-                    }
-
-                } catch (Exception e) {
-                    Log.e("NicknameError", "Error fetching nickname", e);
-                }
-            } else {
-                Log.e("Mypage", "memberId is null, cannot fetch nickname.");
-            }
-        });
-
-        // 포인트 가져오기
-        executorService.execute(() -> {
-            if (memberId != null) {
-                try {
-                    // 포인트 조회 API 호출
-                    URL pointsUrl = new URL("http://15.165.92.121:8080/mypage/points/" + memberId);
-                    HttpURLConnection pointsConnection = (HttpURLConnection) pointsUrl.openConnection();
-                    pointsConnection.setRequestMethod("GET");
-
-                    int responseCode = pointsConnection.getResponseCode();
-                    if (responseCode == 200) { // 성공 응답일 경우
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(pointsConnection.getInputStream()));
-                        StringBuilder result = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            result.append(line);
-                        }
-                        reader.close();
-
-                        // JSON 파싱
-                        JSONObject pointsJson = new JSONObject(result.toString());
-                        int points = pointsJson.getInt("points");
-
-                        // UI 업데이트 (UI 스레드에서 실행)
-                        mainHandler.post(() -> pointsTextView.setText("보유 포인트: " + points + " P"));
-                    } else {
-                        Log.e("PointsAPI", "Failed to fetch points: " + responseCode);
-                    }
-
-                } catch (Exception e) {
-                    Log.e("PointsError", "Error fetching points", e);
-                }
-            } else {
-                Log.e("Mypage", "memberId is null, cannot fetch points.");
-            }
-        });
-
-
-
-        // 기존 버튼 작동 코드
-        findViewById(R.id.check).setOnClickListener(v -> {
-            startActivity(new Intent(Mypage.this, Check.class));
-        });
-
-        findViewById(R.id.home).setOnClickListener(v -> {
-            startActivity(new Intent(Mypage.this, MainActivity.class));
-        });
-
-        findViewById(R.id.chat).setOnClickListener(v -> {
-            startActivity(new Intent(Mypage.this, Chat.class));
-        });
-
-        findViewById(R.id.mypage).setOnClickListener(v -> {
-            startActivity(new Intent(Mypage.this, Mypage.class));
-        });
+        // 네비게이션 버튼들 설정
+        findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(Mypage.this, Check.class)));
+        findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(Mypage.this, MainActivity.class)));
+        findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(Mypage.this, Chat.class)));
+        findViewById(R.id.mypage).setOnClickListener(v -> startActivity(new Intent(Mypage.this, Mypage.class)));
     }
-    //설정이동 버튼
+
     private void openSettingsScreen() {
         Intent intent = new Intent(Mypage.this, SettingActivity.class);
         startActivity(intent);
+    }
+
+    private void updateMypageFromId(String id) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            try {
+                URL url = new URL("http://15.165.92.121:8080/mypage/updateFromId");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                connection.setDoOutput(true);
+
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put("id", id);
+
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+                writer.write(jsonBody.toString());
+                writer.flush();
+                writer.close();
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    runOnUiThread(() -> Toast.makeText(this, "MyPage 업데이트 성공", Toast.LENGTH_SHORT).show());
+                } else {
+                    Log.e("MypageUpdate", "Failed to update MyPage: " + responseCode);
+                    runOnUiThread(() -> Toast.makeText(this, "MyPage 업데이트 실패", Toast.LENGTH_SHORT).show());
+                }
+            } catch (Exception e) {
+                Log.e("MypageUpdateError", "Error updating MyPage", e);
+                runOnUiThread(() -> Toast.makeText(this, "MyPage 업데이트 중 오류 발생", Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void fetchNickname() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        executorService.execute(() -> {
+            try {
+                URL url = new URL("http://15.165.92.121:8080/mypage/nickname/" + userId);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    reader.close();
+
+                    JSONObject jsonObject = new JSONObject(result.toString());
+                    String nickname = jsonObject.getString("nickname");
+
+                    mainHandler.post(() -> nicknameTextView.setText(nickname));
+                } else {
+                    Log.e("NicknameAPI", "Failed to fetch nickname: " + responseCode);
+                }
+            } catch (Exception e) {
+                Log.e("NicknameError", "Error fetching nickname", e);
+            }
+        });
+    }
+
+    private void fetchPoints() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        executorService.execute(() -> {
+            try {
+                URL url = new URL("http://15.165.92.121:8080/mypage/points/" + userId);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    reader.close();
+
+                    JSONObject jsonObject = new JSONObject(result.toString());
+                    int points = jsonObject.getInt("points");
+
+                    mainHandler.post(() -> pointsTextView.setText("보유 포인트: " + points + " P"));
+                } else {
+                    Log.e("PointsAPI", "Failed to fetch points: " + responseCode);
+                }
+            } catch (Exception e) {
+                Log.e("PointsError", "Error fetching points", e);
+            }
+        });
     }
 }

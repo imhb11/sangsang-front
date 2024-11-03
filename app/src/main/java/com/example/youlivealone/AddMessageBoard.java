@@ -120,7 +120,7 @@ public class AddMessageBoard extends AppCompatActivity {
             return;
         }
 
-        String url = "http://54.79.1.3:8080/posts/create"; // 게시글 작성 API URL
+        String url = "http://15.165.92.121:8080/posts/create"; // 게시글 작성 API URL
 
         try {
             JSONObject jsonBody = new JSONObject();
