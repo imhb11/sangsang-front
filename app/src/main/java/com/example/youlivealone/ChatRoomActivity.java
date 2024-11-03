@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.auth0.android.jwt.JWT;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,9 +63,12 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // SharedPreferences에서 사용자 ID와 JWT 토큰 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId", "");
-        jwtToken = sharedPreferences.getString("jwtToken", ""); // JWT 토큰
+        //            memberId = jwt.getClaim("sub").asString();
+        //userId = sharedPreferences.getString("userId", "");
 
+        jwtToken = sharedPreferences.getString("jwtToken", ""); // JWT 토큰
+        JWT jwt = new JWT(jwtToken);
+        userId = jwt.getClaim("sub").asString();
         // userId가 제대로 설정되었는지 로그로 확인해 봅니다.
         Log.d("ChatRoomActivity", "User ID: " + userId);
 
