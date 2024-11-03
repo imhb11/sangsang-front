@@ -2,6 +2,7 @@ package com.example.youlivealone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,14 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatRo
         holder.chatRoomTitle.setText(chatRoom.getName());
         holder.participantCount.setText("참여자 수: " + chatRoom.getParticipantCount());
 
-        // 마지막 메시지 시간이 존재할 경우 표시, 없을 경우 기본값 설정
+        // 애초에 지금 마지막 시간이나 마지막 채팅을 DB에 저장하거나 가져오는 로직이 없음.
+        // 마지막 메시지 시간 표시 설정
         if (chatRoom.getLastMessageTime() != null) {
             holder.lastMessageTime.setText(chatRoom.getLastMessageTime());
+            Log.d("ChatRoomAdapter", "Last message time: " + chatRoom.getLastMessageTime());
         } else {
-            holder.lastMessageTime.setText("No recent messages");
+            holder.lastMessageTime.setText("");
+            Log.d("ChatRoomAdapter", "No recent messages");
         }
 
         // 채팅방 클릭 시 ChatRoomActivity로 이동하며 ID와 이름을 Intent에 전달

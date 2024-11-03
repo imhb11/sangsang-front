@@ -23,14 +23,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="영화 소모임 회장님"
-            android:textSize="14sp"
+            android:textSize="22sp"
             android:textColor="#BAA681"
             android:layout_marginBottom="4dp"/>
+        <!--        android:fontFamily="@font/inria_sans_bold"-->
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="253dp"
             android:layout_height="71dp"
-            android:background="@drawable/chatting_moreview_checkbox_off"
+            android:background="@drawable/message_other"
             android:orientation="horizontal"
             android:padding="8dp">
 
@@ -38,8 +39,12 @@
                 android:id="@+id/messageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="10dp"
                 android:text="무지개"
-                android:textSize="16sp" />
+                android:textSize="13sp"
+                android:textColor="#6A542B"/>
+            <!--            android:fontFamily="@font/inria_sans_regular"-->
         </LinearLayout>
     </LinearLayout>
 

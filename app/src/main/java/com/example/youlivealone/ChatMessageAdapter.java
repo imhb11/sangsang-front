@@ -10,7 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -77,7 +81,19 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public void bind(ChatMessage chatMessage) {
             messageText.setText(chatMessage.getContent());
-            messageTimestamp.setText(chatMessage.getTimestamp());
+            messageTimestamp.setText(formatTimestamp(chatMessage.getTimestamp()));
+        }
+        // 시간을 00:00 형태로 포맷하는 메서드
+        private String formatTimestamp(String timestamp) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                Date date = inputFormat.parse(timestamp);
+                return outputFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return timestamp; // 포맷 실패 시 원래의 타임스탬프 반환
+            }
         }
     }
 
@@ -95,7 +111,19 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void bind(ChatMessage chatMessage) {
             userId.setText(chatMessage.getSenderId());
             messageText.setText(chatMessage.getContent());
-            messageTimestamp.setText(chatMessage.getTimestamp());
+            messageTimestamp.setText(formatTimestamp(chatMessage.getTimestamp()));
+        }
+
+        private String formatTimestamp(String timestamp) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                Date date = inputFormat.parse(timestamp);
+                return outputFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return timestamp;
+            }
         }
     }
 }
