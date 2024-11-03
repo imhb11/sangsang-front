@@ -1,6 +1,7 @@
 package com.example.youlivealone;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,13 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         ChatMessage chatMessage = chatMessages.get(position);
-        return chatMessage.getSenderId().equals(userId) ? VIEW_TYPE_SELF : VIEW_TYPE_OTHER;
+        if (chatMessage.getSenderId().equals(userId)) {
+            Log.d("ChatMessageAdapter", "Self message detected for position: " + position);
+            return VIEW_TYPE_SELF;
+        } else {
+            Log.d("ChatMessageAdapter", "Other message detected for position: " + position+"chatMessage.getSenderId()"+ chatMessage.getSenderId()+"//"+userId);
+            return VIEW_TYPE_OTHER;
+        }
     }
 
     @NonNull

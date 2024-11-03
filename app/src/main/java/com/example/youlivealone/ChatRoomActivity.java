@@ -2,6 +2,7 @@ package com.example.youlivealone;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -62,6 +65,9 @@ public class ChatRoomActivity extends AppCompatActivity {
         userId = sharedPreferences.getString("userId", "");
         jwtToken = sharedPreferences.getString("jwtToken", ""); // JWT 토큰
 
+        // userId가 제대로 설정되었는지 로그로 확인해 봅니다.
+        Log.d("ChatRoomActivity", "User ID: " + userId);
+
         // RecyclerView 설정
         chatMessages = new ArrayList<>();
         chatMessageAdapter = new ChatMessageAdapter(chatMessages,userId);
@@ -70,6 +76,51 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // 메시지 전송 버튼 클릭 리스너
         sendButton.setOnClickListener(v -> sendMessage());
+
+        loadChatMessages();
+    }
+
+    private void loadChatMessages() {
+        String url = "http://15.165.92.121:8080/chat/room/" + chatRoomId + "/message-list";
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        JSONArray messagesArray = response.getJSONArray("messages");
+                        chatMessages.clear();
+
+                        for (int i = 0; i < messagesArray.length(); i++) {
+                            JSONObject messageObject = messagesArray.getJSONObject(i);
+
+                            int messageId = messageObject.getInt("id");
+                            String content = messageObject.getString("content");
+                            String senderId = messageObject.getString("senderId");
+                            String timestamp = messageObject.getString("timestamp");
+
+                            ChatMessage message = new ChatMessage(senderId, content, timestamp);
+                            chatMessages.add(message);
+                        }
+
+                        chatMessageAdapter.notifyDataSetChanged();
+                        chatMessagesRecyclerView.scrollToPosition(chatMessages.size() - 1);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "메시지 로드 중 오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> Toast.makeText(this, "메시지 목록을 불러오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + jwtToken); // JWT 토큰 추가
+                return headers;
+            }
+        };
+
+        queue.add(request);
     }
 
     private void sendMessage() {
