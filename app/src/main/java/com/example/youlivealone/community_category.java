@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -191,8 +191,8 @@ public class community_category extends AppCompatActivity {
 
         //버튼 작동코드들
         //버튼 클릭시
-        TextView liveTalkButton = findViewById(R.id.textView14);
-        liveTalkButton.setOnClickListener(v -> {
+        ImageButton imageButton = (ImageButton) findViewById(R.id.textView14);
+        imageButton.setOnClickListener(v -> {
             Intent intent = new Intent(community_category.this, RealtimeChatActivity.class);
             startActivity(intent);
         });

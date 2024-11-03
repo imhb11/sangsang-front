@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -92,7 +91,7 @@ public class RealtimeChatActivity extends AppCompatActivity {
                 String description = roomObject.getString("description");
                 int maxParticipants = roomObject.getInt("maxParticipants");
                 //int category = roomObject.getInt("category");
-                int participantCount = roomObject.getInt("participantCount");
+                int participantCount = roomObject.optInt("participantCount", 0);
                 //String craetorId = roomObject.getString("creatorId");
                 // category가 JSONObject로 들어올 때 안전하게 접근
                 int categoryId = -1; // 기본값 설정
