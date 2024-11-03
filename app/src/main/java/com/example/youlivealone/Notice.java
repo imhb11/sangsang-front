@@ -11,30 +11,21 @@ public class Notice extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notice);
 
-        //버튼 작동코드들
-
-        findViewById(R.id.map).setOnClickListener(v -> {
-            Intent intent = new Intent(Notice.this, Map.class);
-            startActivity(intent);
-        });
-
+        // 기존 버튼 작동 코드
         findViewById(R.id.check).setOnClickListener(v -> {
-            Intent intent = new Intent(Notice.this, Check.class);
-            startActivity(intent);
+            startActivity(new Intent(Notice.this, Check.class));
         });
 
         findViewById(R.id.home).setOnClickListener(v -> {
-            Intent intent = new Intent(Notice.this, MainActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(Notice.this, MainActivity.class));
         });
 
         findViewById(R.id.chat).setOnClickListener(v -> {
-            Intent intent = new Intent(Notice.this, Chat.class);
-            startActivity(intent);
+            startActivity(new Intent(Notice.this, Chat.class));
         });
+
         findViewById(R.id.mypage).setOnClickListener(v -> {
-            Intent intent = new Intent(Notice.this, Mypage.class);
-            startActivity(intent);
+            startActivity(new Intent(Notice.this, Mypage.class));
         });
     }
 }
