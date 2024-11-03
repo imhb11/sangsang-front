@@ -87,7 +87,7 @@ public class Smart extends AppCompatActivity {
     }
 
     private void onIngredientsRecognized(List<String> ingredients) {
-        recipeFetcher.fetchRecipe(ingredients, , new Callback() {
+        recipeFetcher.fetchRecipe(ingredients,, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> ((TextView) findViewById(R.id.recipeTextView)).setText("Error: " + e.getMessage()));
