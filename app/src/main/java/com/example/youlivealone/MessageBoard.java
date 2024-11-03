@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,8 @@ public class MessageBoard extends AppCompatActivity {
     private ArrayAdapter<Post> newAdapter;
     private List<Post> newItems = new ArrayList<>();
     private static final String NEW_URL = "http://15.165.92.121:8080/categories/{categoryId}/posts";
+    private static final String SEARCH_URL = "http://15.165.92.121:8080/search?query={title}";
+    private static final String POPULAR_URL = "http://15.165.92.121:8080/posts/popular"; // Add your actual endpoint here
 
 
     private EditText searchBar;
@@ -53,10 +57,11 @@ public class MessageBoard extends AppCompatActivity {
         popularButton = findViewById(R.id.popular_button);
 //        scrollView = findViewById(R.id.community_post_list);
 
+
         newlist = findViewById(R.id.community_post_list);
         newAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, newItems);
         newlist.setAdapter(newAdapter);
-// SharedPreferences에서 카테고리 ID 가져오기
+        // SharedPreferences에서 카테고리 ID 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         int categoryId = sharedPreferences.getInt("categoryId", -1); // 기본값 -1
 
@@ -89,7 +94,18 @@ public class MessageBoard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String query = searchBar.getText().toString();
-                // 검색 기능 구현 (예: 검색어로 필터링된 게시물 표시)
+                if (!query.isEmpty()) {
+                    try {
+                        String encodedQuery = URLEncoder.encode(query, "UTF-8");
+                        String searchUrl = SEARCH_URL.replace("{title}", encodedQuery);
+                        loadPostList(searchUrl);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MessageBoard.this, "인코딩 오류 발생", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MessageBoard.this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -115,12 +131,23 @@ public class MessageBoard extends AppCompatActivity {
         popularButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 인기순 정렬 기능 구현
-            }
+                // SharedPreferences에서 카테고리 ID 가져오기
+                SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                int categoryId = sharedPreferences.getInt("categoryId", -1);
+
+                if (categoryId != -1) {
+                    // URL에 카테고리 ID 적용
+                    String popularPostsUrl = POPULAR_URL.replace("{categoryId}", String.valueOf(categoryId));
+                    loadPostList(popularPostsUrl); // 인기 포스트 리스트를 로드
+                } else {
+                    Toast.makeText(MessageBoard.this, "카테고리 ID를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
+                }            }
         });
     }
     private void loadPostList(String url) {
         RequestQueue queue = Volley.newRequestQueue(this);
+
+        newItems.clear();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
@@ -133,11 +160,11 @@ public class MessageBoard extends AppCompatActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
-//                                String postId = post.getString("postId"); // postId 가져오기
+                                String postId = post.getString("id"); // postId 가져오기
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
-                                newItems.add(new Post(id, title, content));
+                                newItems.add(new Post(postId, id, title, content));
                             }
 
                             newAdapter.notifyDataSetChanged();
@@ -156,4 +183,6 @@ public class MessageBoard extends AppCompatActivity {
 
         queue.add(jsonArrayRequest);
     }
+
+
 }
