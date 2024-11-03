@@ -154,8 +154,11 @@ public class Meeting_category extends AppCompatActivity {
                             int memberCount = post.getInt("memberCount"); // 멤버 수
                             String meetingCategoryId = post.getString("meetingCategoryId"); // 회의 카테고리 ID
                             String subcategoryId = post.getString("subcategoryId"); // 서브카테고리 ID
+                            double latitude = post.getDouble("latitude");  // 추가된 필드
+                            double longitude = post.getDouble("longitude"); // 추가된 필드
 
-                            posts.add(new Meeting_post(id, title, introduction, content, memberCount, meetingCategoryId, subcategoryId)); // Post 객체 생성 및 추가
+
+                            posts.add(new Meeting_post(id, title, introduction, content, memberCount, meetingCategoryId, subcategoryId, latitude, longitude));
                         }
                         updateListView(posts); // 리스트 업데이트
                     } catch (JSONException e) {
@@ -191,12 +194,15 @@ public class Meeting_category extends AppCompatActivity {
                             String id = post.getString("id"); // 글 ID
                             String title = post.getString("title"); // 글 제목
                             String introduction = post.getString("introduction"); // 소개
+
                             String content = post.getString("content"); // 내용
                             int memberCount = post.getInt("memberCount"); // 멤버 수
                             String meetingCategoryId = post.getString("meetingCategoryId"); // 회의 카테고리 ID
                             String subcategoryIdFromJson  = post.getString("subcategoryId"); // 서브카테고리 ID
+                            double latitude = post.getDouble("latitude");  // 추가된 필드
+                            double longitude = post.getDouble("longitude"); // 추가된 필드
 
-                            posts.add(new Meeting_post(id, title, introduction, content, memberCount, meetingCategoryId,subcategoryIdFromJson)); // Post 객체 생성 및 추가
+                            posts.add(new Meeting_post(id, title, introduction, content, memberCount, meetingCategoryId, subcategoryIdFromJson, latitude, longitude));
                         }
                         updateListView(posts); // 리스트 업데이트
                     } catch (JSONException e) {
@@ -228,6 +234,11 @@ public class Meeting_category extends AppCompatActivity {
             intent.putExtra("introduction", selectedPost.getIntroduction());
             intent.putExtra("content", selectedPost.getContent());
             intent.putExtra("memberCount", selectedPost.getMemberCount());
+            intent.putExtra("latitude", selectedPost.getLatitude());
+            intent.putExtra("longitude", selectedPost.getLongitude());
+
+            intent.putExtra("meetingCategoryId", selectedPost.getMeetingCategoryId());
+            intent.putExtra("subcategoryId", selectedPost.getSubcategoryID());
 
             startActivity(intent);
         });
