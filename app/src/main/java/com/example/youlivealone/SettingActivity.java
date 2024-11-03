@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
     private EditText editNickname, editEmail, editEmergencyContact;
     private Button buttonSaveNickname, buttonSaveEmail, buttonSaveEmergencyContact;
     private Switch switchGlobalNotifications, switchCommentNotifications, switchChatNotifications, switchLikeNotifications;
-    private String memberId;
+    private String userId; // 실제 userId를 저장하기 위한 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +54,14 @@ public class SettingActivity extends AppCompatActivity {
         switchChatNotifications = findViewById(R.id.switch_chat_notifications);
         switchLikeNotifications = findViewById(R.id.switch_like_notifications);
 
-
-        // JWT 토큰에서 memberId 추출
+        // JWT 토큰에서 userId 추출
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
 
         if (token != null) {
             JWT jwt = new JWT(token);
-            memberId = jwt.getClaim("sub").asString();
+            userId = jwt.getClaim("sub").asString(); // sub에서 userId를 가져옴
+            Log.d("SettingActivity", "Extracted userId (from sub): " + userId);
         } else {
             Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -69,9 +69,9 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         // 저장 버튼 동작 설정
-        buttonSaveNickname.setOnClickListener(v -> saveUserInfo("nickname", "http://15.165.92.121:8080/mypage/setting/nickname/" + memberId, "newNickname", editNickname.getText().toString()));
-        buttonSaveEmail.setOnClickListener(v -> saveUserInfo("email", "http://15.165.92.121:8080/mypage/setting/email/" + memberId, "newEmail", editEmail.getText().toString()));
-        buttonSaveEmergencyContact.setOnClickListener(v -> saveUserInfo("emergencyContact", "http://15.165.92.121:8080/mypage/setting/emergencyContact/" + memberId, "newContact", editEmergencyContact.getText().toString()));
+        buttonSaveNickname.setOnClickListener(v -> saveUserInfo("nickname", "http://15.165.92.121:8080/mypage/setting/nickname/" + userId, "newNickname", editNickname.getText().toString()));
+        buttonSaveEmail.setOnClickListener(v -> saveUserInfo("email", "http://15.165.92.121:8080/mypage/setting/email/" + userId, "newEmail", editEmail.getText().toString()));
+        buttonSaveEmergencyContact.setOnClickListener(v -> saveUserInfo("emergencyContact", "http://15.165.92.121:8080/mypage/setting/emergencyContact/" + userId, "newContact", editEmergencyContact.getText().toString()));
 
         // 알림 설정 동작
         switchGlobalNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -79,13 +79,12 @@ public class SettingActivity extends AppCompatActivity {
             switchChatNotifications.setChecked(isChecked);
             switchLikeNotifications.setChecked(isChecked);
         });
-
     }
 
     private void saveUserInfo(String type, String url, String jsonKey, String value) {
         try {
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("memberId", memberId);
+            jsonBody.put("userId", userId); // userId를 JSON에 추가
             jsonBody.put(jsonKey, value);
 
             new Thread(() -> {
@@ -106,6 +105,7 @@ public class SettingActivity extends AppCompatActivity {
                         runOnUiThread(() -> Toast.makeText(this, type + " 저장 완료", Toast.LENGTH_SHORT).show());
                     } else {
                         runOnUiThread(() -> Toast.makeText(this, type + " 저장 실패", Toast.LENGTH_SHORT).show());
+                        Log.e("SaveUserInfoError", "Failed to save " + type + ": " + responseCode);
                     }
                 } catch (Exception e) {
                     runOnUiThread(() -> Toast.makeText(this, type + " 저장 중 오류 발생", Toast.LENGTH_SHORT).show());
@@ -117,7 +117,5 @@ public class SettingActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(this, "데이터 변환 중 오류 발생", Toast.LENGTH_SHORT).show();
         }
-
     }
-
 }

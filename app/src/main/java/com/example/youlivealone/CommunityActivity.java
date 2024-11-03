@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class CommunityActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://15.165.92.121:8080/mypage/community";
-    private String memberId;
+    private String userId;
 
     private LinearLayout writtenPostList;
     private LinearLayout likedPostList;
@@ -49,8 +49,8 @@ public class CommunityActivity extends AppCompatActivity {
             return;
         }
 
-        // Extract memberId from token
-        memberId = extractMemberIdFromToken(token);
+        // Extract userId from token
+        userId = extractUserIdFromToken(token);
 
         // Back button functionality
         backButton.setOnClickListener(v -> {
@@ -71,18 +71,18 @@ public class CommunityActivity extends AppCompatActivity {
         findViewById(R.id.mypage).setOnClickListener(v -> startActivity(new Intent(this, Mypage.class)));
     }
 
-    private String extractMemberIdFromToken(String token) {
+    private String extractUserIdFromToken(String token) {
         try {
             JSONObject jsonObject = new JSONObject(new String(android.util.Base64.decode(token.split("\\.")[1], android.util.Base64.DEFAULT)));
             return jsonObject.getString("sub");
         } catch (Exception e) {
-            Log.e("CommunityActivity", "Error extracting memberId", e);
+            Log.e("CommunityActivity", "Error extracting userId", e);
             return null;
         }
     }
 
     private void fetchWrittenPosts() {
-        String url = BASE_URL + "/writtenposts/" + memberId;
+        String url = BASE_URL + "/writtenposts/" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -93,7 +93,7 @@ public class CommunityActivity extends AppCompatActivity {
     }
 
     private void fetchLikedPosts() {
-        String url = BASE_URL + "/likedposts/" + memberId;
+        String url = BASE_URL + "/likedposts/" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -104,7 +104,7 @@ public class CommunityActivity extends AppCompatActivity {
     }
 
     private void fetchChatRooms() {
-        String url = BASE_URL + "/chatrooms/" + memberId;
+        String url = BASE_URL + "/chatrooms/" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
