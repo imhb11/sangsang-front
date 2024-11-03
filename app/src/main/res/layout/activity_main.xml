@@ -8,6 +8,19 @@
     android:background="@color/white"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 슬라이더 및 버튼 레이아웃 -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/weekRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/notice"
@@ -120,7 +133,7 @@
         android:layout_height="35dp"
         android:layout_marginStart="54dp"
         android:layout_marginEnd="54dp"
-        android:background="@drawable/home_press"
+        android:background="@drawable/home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/check"
         app:layout_constraintHorizontal_bias="0.0"

@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\appproject\sangsangcompany\sangsang-front-ccccc\OpenCV\.cxx\Debug\2x6j294r\armeabi-v7a'
+ninja: no work to do.

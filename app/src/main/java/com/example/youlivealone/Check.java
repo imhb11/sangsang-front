@@ -16,7 +16,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.youlivealone.Chat;
 import com.example.youlivealone.MainActivity;
@@ -94,21 +93,23 @@ public class Check extends AppCompatActivity {
 
                     // 출석 체크 요청 보내기 (기분 데이터 제외)
                     sendMoodCheckRequest();
-
                 });
         builder.create().show();
     }
 
-    // 기분 체크 POST 요청 보내기 (StringRequest로 문자열 응답 받기)
+    // 기분 체크 POST 요청 보내기 (기분 정보는 보내지 않음)
     private void sendMoodCheckRequest() {
-        String url = "http://15.165.92.121:8080/attendance/check?memberId=" + memberId;
+        String url = "http://15.165.92.121:8080/attendance/check";
+
+        // JSON 객체 생성 - 내용 없이 빈 객체를 보내기
+        JSONObject jsonBody = new JSONObject();
 
         // POST 요청 생성
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(Check.this, "출석 체크 완료: " + response, Toast.LENGTH_SHORT).show();
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(Check.this, "출석 체크 완료!", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -123,18 +124,11 @@ public class Check extends AppCompatActivity {
                 headers.put("Content-Type", "application/json");
                 return headers;
             }
-
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                return "{}".getBytes();  // 빈 JSON 객체 전송
-            }
         };
 
         // 요청 큐에 추가
-        requestQueue.add(stringRequest);
+        requestQueue.add(jsonObjectRequest);
     }
-
-
 
     // MoodDecorator 클래스
     private class MoodDecorator implements DayViewDecorator {
