@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
@@ -26,9 +27,11 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.Map;
+
+import java.util.HashMap;
 
 public class Meeting_detail extends AppCompatActivity implements OnMapReadyCallback{
     private MapView mapView;
@@ -88,6 +91,10 @@ public class Meeting_detail extends AppCompatActivity implements OnMapReadyCallb
         String introduction = getIntent().getStringExtra("introduction");
         String content = getIntent().getStringExtra("content");
         int memberCount = getIntent().getIntExtra("memberCount", 0);
+        double latitude = getIntent().getDoubleExtra("latitude", 0.0);
+        double longitude = getIntent().getDoubleExtra("longitude", 0.0);
+        String meetingCategoryId = getIntent().getStringExtra("meetingCategoryId");
+        String subcategoryId = getIntent().getStringExtra("subcategoryId");
 
         titleTextView.setText(title);
         introTextView.setText(introduction);
@@ -96,67 +103,43 @@ public class Meeting_detail extends AppCompatActivity implements OnMapReadyCallb
 
         //소모임 신청 버튼
         applyButton.setOnClickListener(v -> {
-            sendApplicationRequest(postId); // postId를 인자로 전달
+            sendApplicationRequest(postId,meetingCategoryId,subcategoryId); // postId를 인자로 전달
         });
+
+        addMarker(latitude, longitude);
 
     }
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         this.mnavermap = naverMap;
-
-        // 서버에서 좌표 데이터를 불러와 지도에 마커 추가
-        loadMarkerDataFromServer("http://your-server-url.com/coordinates"); // 서버 URL에 맞게 수정
+        // 여기에서 마커를 추가합니다.
+        // Intent에서 가져온 latitude와 longitude를 사용
+        double latitude = getIntent().getDoubleExtra("latitude", 0.0);
+        double longitude = getIntent().getDoubleExtra("longitude", 0.0);
+        addMarker(latitude, longitude);
     }
-    // 서버에서 위도와 경도 데이터를 받아와 마커를 추가하는 메서드
-    private void loadMarkerDataFromServer(String url) {
-        RequestQueue queue = Volley.newRequestQueue(this);
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            for (int i = 0; i < response.length(); i++) {
-                                JSONObject location = response.getJSONObject(i);
-                                double latitude = location.getDouble("latitude");
-                                double longitude = location.getDouble("longitude");
-
-                                // 위도와 경도에 마커 추가
-                                addMarker(latitude, longitude);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(Meeting_detail.this, "Failed to load marker data", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        queue.add(jsonArrayRequest);
-    }
 
     // 마커를 지도에 추가하는 메서드
     private void addMarker(double latitude, double longitude) {
-        Marker marker = new Marker();
-        marker.setPosition(new LatLng(latitude, longitude));
-        marker.setMap(mnavermap);
-    }
+        if (mnavermap != null) {
+            Marker marker = new Marker();
+            marker.setPosition(new LatLng(latitude, longitude));
+            marker.setMap(mnavermap);
+            mnavermap.moveCamera(CameraUpdate.scrollTo(new LatLng(latitude, longitude)));
 
+            Log.d("Marker", "마커 추가됨: 위도=" + latitude + ", 경도=" + longitude);
+        } else {
+            Log.e("Marker", "mnavermap이 null입니다. 마커를 추가할 수 없습니다.");
+        }
+    }
 
 
 
     //소모임 신청
-    private void sendApplicationRequest(String postId) {
-        String url = "http://15.165.92.121:8080/meetings/{meetingId}/join"; // 서버 URL 수정
+    private void sendApplicationRequest(String postId, String meetingCategoryId, String subcategoryId) {
+        String url = "http://15.165.92.121:8080/meetings/" + meetingCategoryId + "/join";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JSONObject applicationData = new JSONObject();
@@ -164,8 +147,9 @@ public class Meeting_detail extends AppCompatActivity implements OnMapReadyCallb
             SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             String userId = sharedPreferences.getString("userId", null); // 기본값으로 null 설정
 
-            applicationData.put("userId", userId); // 사용자 ID
-            applicationData.put("postId", postId); // 모임 ID
+            applicationData.put("postId", postId);
+            applicationData.put("meetingCategoryId", meetingCategoryId);
+            applicationData.put("subcategoryId", subcategoryId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -183,9 +167,56 @@ public class Meeting_detail extends AppCompatActivity implements OnMapReadyCallb
                     // 서버 요청 실패 처리
                     Toast.makeText(this, "신청 실패", Toast.LENGTH_SHORT).show();
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+
+                // SharedPreferences에서 JWT 토큰 가져오기
+                String jwtToken = getSharedPreferences("UserPrefs", MODE_PRIVATE).getString("jwtToken", null);
+                headers.put("Authorization", "Bearer " + jwtToken); // JWT 토큰 추가
+
+                return headers;
+            }
+        };
 
         queue.add(jsonObjectRequest);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
 }

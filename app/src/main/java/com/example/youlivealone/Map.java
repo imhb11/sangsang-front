@@ -10,7 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
@@ -21,6 +25,7 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -34,6 +39,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
     private RequestQueue requestQueue;
     private ArrayList<Marker> markers = new ArrayList<>(); // 마커 리스트
+    private int selectedCategoryId; // 선택된 카테고리 ID
+    private ArrayList<JSONObject> allMeetings = new ArrayList<>(); // 모든 소모임 데이터 저장
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         locationSource =
                 new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
+        fetchAllMeetings(); // 모든 소모임 데이터 가져오기
+        setUpButtonListeners(); // 여기에서 버튼 리스너를 설정합니다.
 
 
         // 버튼 작동코드들
@@ -62,12 +71,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
             startActivity(intent);
         });
 
-        findViewById(R.id.btnchinmok).setOnClickListener(v -> displayMarkersForCategory("category1"));
-        findViewById(R.id.btnexercise).setOnClickListener(v -> displayMarkersForCategory("category2"));
-        findViewById(R.id.btnmovie).setOnClickListener(v -> displayMarkersForCategory("category3"));
-        findViewById(R.id.btnfood).setOnClickListener(v -> displayMarkersForCategory("category4"));
-        findViewById(R.id.btndongchang).setOnClickListener(v -> displayMarkersForCategory("category5"));
-        findViewById(R.id.btnstudy).setOnClickListener(v -> displayMarkersForCategory("category6"));
     }
 
     //권한 여부처리
@@ -94,39 +97,88 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     // 카테고리 선택 시 해당 카테고리에 맞는 마커 표시
-    private void displayMarkersForCategory(String category) {
+    private void displayMarkersForCategory(int categoryId) {
         // 기존 마커 삭제
         for (Marker marker : markers) {
             marker.setMap(null);
         }
         markers.clear();
 
-        // 서버에서 선택된 카테고리에 맞는 위치 데이터를 가져옴
-        String url = "http://서버주소/locations?category=" + category;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                response -> {
-                    try {
-                        JSONArray locations = response.getJSONArray("locations");
-                        for (int i = 0; i < locations.length(); i++) {
-                            JSONObject location = locations.getJSONObject(i);
-                            double latitude = location.getDouble("latitude");
-                            double longitude = location.getDouble("longitude");
+        try {
+            for (JSONObject meeting : allMeetings) {
+                int meetingCategoryId = meeting.getInt("meetingCategoryId");
+                if (meetingCategoryId == categoryId) {
+                    double lat = meeting.getDouble("latitude");
+                    double lng = meeting.getDouble("longitude");
+                    String title = meeting.getString("title");
 
-                            // 마커 생성 및 위치 설정
-                            Marker marker = new Marker();
-                            marker.setPosition(new LatLng(latitude, longitude));
-                            marker.setMap(mnavermap);
-                            markers.add(marker);
+                    // 지도에 마커 추가
+                    Marker marker = new Marker();
+                    marker.setPosition(new LatLng(lat, lng));
+                    marker.setMap(mnavermap);
+                    marker.setCaptionText(title);
+                    marker.setCaptionTextSize(12);
+                    markers.add(marker); // 마커 리스트에 추가
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // 버튼 클릭 리스너
+    private void setUpButtonListeners() {
+        int[] buttonIds = {R.id.btnexercise, R.id.btnchinmok, R.id.btndongchang, R.id.btnfood, R.id.btnstudy, R.id.btnmovie};
+        int[] categoryIds = {1, 2, 3, 4, 5, 6};
+
+        for (int i = 0; i < buttonIds.length; i++) {
+            final int categoryId = categoryIds[i];
+            findViewById(buttonIds[i]).setOnClickListener(v -> {
+                selectedCategoryId = categoryId;
+                fetchAllMeetings();
+            });
+        }
+    }
+
+
+    private void fetchAllMeetings() {
+        String url = "http://15.165.92.121:8080/meetings/locations"; // 서버 URL
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            // 모든 회의 데이터를 가져오기
+                            allMeetings.clear(); // 이전 데이터 초기화
+                            for (int i = 0; i < response.length(); i++) {
+                                JSONObject meeting = response.getJSONObject(i);
+                                allMeetings.add(meeting);
+                            }
+
+                            // 카테고리가 선택되어 있다면 마커 표시
+                            if (selectedCategoryId != 0) {
+                                displayMarkersForCategory(selectedCategoryId);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        Log.e("MapActivity", "Error parsing JSON", e);
                     }
                 },
-                error -> Log.e("MapActivity", "Error fetching location data", error)
-        );
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
 
-        requestQueue.add(jsonObjectRequest);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
+
+
+
 
     @Override
     protected void onStart() {
