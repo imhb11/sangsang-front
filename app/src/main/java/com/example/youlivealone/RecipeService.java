@@ -20,7 +20,7 @@ import okhttp3.Response;
 
 public class RecipeService {
 
-    private static final String API_KEY = "";
+
     private static final String API_URL = "https://api.openai.com/v1/completions";
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
