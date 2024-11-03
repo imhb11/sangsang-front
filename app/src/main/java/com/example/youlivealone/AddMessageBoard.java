@@ -37,14 +37,14 @@ public class AddMessageBoard extends AppCompatActivity {
 
         // UI 요소를 findViewById로 연결
         titleInput = findViewById(R.id.title_input);
-        subtitleInput = findViewById(R.id.subtitle_input);
+        //subtitleInput = findViewById(R.id.subtitle_input);
         contentInput = findViewById(R.id.content_input);
         uploadButton = findViewById(R.id.upload_button);
-        saveButton = findViewById(R.id.save_button);
+       /* saveButton = findViewById(R.id.save_button);
         keywordButton = findViewById(R.id.keyword_button);
         fileButton = findViewById(R.id.file_button);
         mp3Button = findViewById(R.id.mp3_button);
-        emojiButton = findViewById(R.id.emoji_button);
+        emojiButton = findViewById(R.id.emoji_button);*/
 
         // 업로드 버튼 클릭 이벤트 처리
         uploadButton.setOnClickListener(new View.OnClickListener() {

@@ -49,7 +49,7 @@ public class MessageBoard extends AppCompatActivity {
         searchBar = findViewById(R.id.search_bar);
         searchButton = findViewById(R.id.search_button);
         additionalButton = findViewById(R.id.additional_button);
-        latestButton = findViewById(R.id.latest_button);
+        //latestButton = findViewById(R.id.latest_button);
         popularButton = findViewById(R.id.popular_button);
 //        scrollView = findViewById(R.id.community_post_list);
 

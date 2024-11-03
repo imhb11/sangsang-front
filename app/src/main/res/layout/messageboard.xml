@@ -1,121 +1,135 @@
-<?xml version="1.0" encoding="utf-8"?><androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:padding="16dp">
 
     <!-- Title -->
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="게시판"
-        android:textSize="24sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+<TextView
+android:id="@+id/title"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="게시판"
+android:textSize="24sp"
+android:textColor="#BAA681"
+android:textStyle="bold"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Search Bar with Buttons -->
-    <EditText
-        android:id="@+id/search_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="검색창"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search_button"
-        app:layout_constraintHorizontal_chainStyle="packed"/>
+<EditText
+android:id="@+id/search_bar"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:hint="검색창"
+android:background="@drawable/border"
+android:padding="8dp"
+app:layout_constraintTop_toBottomOf="@id/title"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toStartOf="@id/search_button"
+app:layout_constraintHorizontal_chainStyle="packed" />
 
     <!-- Search Button -->
-    <ImageButton
-        android:id="@+id/search_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Search"
-        android:src="@drawable/search2"
-        app:layout_constraintBottom_toBottomOf="@id/search_bar"
-        app:layout_constraintEnd_toStartOf="@id/additional_button"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+<ImageButton
+android:id="@+id/search_button"
+android:layout_width="48dp"
+android:layout_height="48dp"
+android:background="?attr/selectableItemBackgroundBorderless"
+android:contentDescription="Search"
+android:src="@drawable/search2"
+app:layout_constraintBottom_toBottomOf="@id/search_bar"
+app:layout_constraintEnd_toStartOf="@id/additional_button"
+app:layout_constraintTop_toTopOf="@id/search_bar" />
 
     <!-- Additional Button -->
-    <ImageButton
-        android:id="@+id/additional_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Add"
-        android:src="@drawable/plus"
-        app:layout_constraintBottom_toBottomOf="@id/search_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
-
-    <!-- Latest Button -->
-    <Button
-        android:id="@+id/latest_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="최신순"
-        app:layout_constraintEnd_toStartOf="@id/popular_button"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
+<ImageButton
+android:id="@+id/additional_button"
+android:layout_width="48dp"
+android:layout_height="48dp"
+android:background="?attr/selectableItemBackgroundBorderless"
+android:contentDescription="Add"
+android:src="@drawable/plus"
+app:layout_constraintBottom_toBottomOf="@id/search_bar"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintTop_toTopOf="@id/search_bar" />
 
     <!-- Popular Button -->
-    <Button
-        android:id="@+id/popular_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="인기순"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"
-        app:layout_constraintStart_toEndOf="@id/latest_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"/>
+<Button
+android:id="@+id/popular_button"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="인기순"
+android:textColor="#BAA681"
+android:backgroundTint="#EDE5D4"
+app:layout_constraintTop_toBottomOf="@id/search_bar"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- ScrollView for Posts -->
-    <ListView
-        android:id="@+id/community_post_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/border"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/latest_button">
-
-
-    </ListView>
+<ListView
+android:id="@+id/community_post_list"
+android:layout_width="0dp"
+android:layout_height="0dp"
+android:background="@drawable/border"
+android:scrollbars="vertical"
+app:layout_constraintBottom_toTopOf="@id/materialToolbar"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/popular_button" />
 
     <!-- Bottom Navigation -->
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+<com.google.android.material.appbar.MaterialToolbar
+android:id="@+id/materialToolbar"
+android:layout_width="match_parent"
+android:layout_height="78dp"
+android:background="#BAA681"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Example Bottom Navigation Items -->
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+    <!-- Bottom Navigation Icons -->
+<ImageButton
+android:id="@+id/home"
+android:layout_width="35dp"
+android:layout_height="35dp"
+android:layout_marginStart="54dp"
+android:layout_marginEnd="54dp"
+android:background="@drawable/home"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
 
-            android:contentDescription="Home"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+<ImageButton
+android:id="@+id/check"
+android:layout_width="35dp"
+android:layout_height="35dp"
+android:layout_marginEnd="54dp"
+android:background="@drawable/check"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toStartOf="@+id/chat"
+app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
 
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+<ImageButton
+android:id="@+id/chat"
+android:layout_width="35dp"
+android:layout_height="35dp"
+android:layout_marginEnd="54dp"
+android:background="@drawable/chat"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toStartOf="@+id/mypage"
+app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
 
-            android:contentDescription="Map"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+<ImageButton
+android:id="@+id/mypage"
+android:layout_width="35dp"
+android:layout_height="35dp"
+android:layout_marginEnd="54dp"
+android:background="@drawable/mypage"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintTop_toTopOf="@+id/materialToolbar" />
 
-        <!-- Add more bottom navigation items here -->
-
-    </LinearLayout></androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
