@@ -26,22 +26,20 @@ public class SettingActivity extends AppCompatActivity {
     private EditText editNickname, editEmail, editEmergencyContact;
     private Button buttonSaveNickname, buttonSaveEmail, buttonSaveEmergencyContact;
     private Switch switchGlobalNotifications, switchCommentNotifications, switchChatNotifications, switchLikeNotifications;
-    private String userId; // 실제 userId를 저장하기 위한 변수
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
 
-        // Back 버튼 클릭 시 Mypage로 돌아가기
         TextView backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(SettingActivity.this, Mypage.class);
             startActivity(intent);
-            finish(); // 현재 Activity 종료하여 돌아가기
+            finish();
         });
 
-        // UI 요소 초기화
         editNickname = findViewById(R.id.edit_nickname);
         editEmail = findViewById(R.id.edit_email);
         editEmergencyContact = findViewById(R.id.edit_emergency_contact);
@@ -60,7 +58,7 @@ public class SettingActivity extends AppCompatActivity {
 
         if (token != null) {
             JWT jwt = new JWT(token);
-            userId = jwt.getClaim("sub").asString(); // sub에서 userId를 가져옴
+            userId = jwt.getClaim("sub").asString();
             Log.d("SettingActivity", "Extracted userId (from sub): " + userId);
         } else {
             Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
@@ -69,9 +67,9 @@ public class SettingActivity extends AppCompatActivity {
         }
 
         // 저장 버튼 동작 설정
-        buttonSaveNickname.setOnClickListener(v -> saveUserInfo("nickname", "http://15.165.92.121:8080/mypage/setting/nickname/" + userId, "newNickname", editNickname.getText().toString()));
-        buttonSaveEmail.setOnClickListener(v -> saveUserInfo("email", "http://15.165.92.121:8080/mypage/setting/email/" + userId, "newEmail", editEmail.getText().toString()));
-        buttonSaveEmergencyContact.setOnClickListener(v -> saveUserInfo("emergencyContact", "http://15.165.92.121:8080/mypage/setting/emergencyContact/" + userId, "newContact", editEmergencyContact.getText().toString()));
+        buttonSaveNickname.setOnClickListener(v -> saveUserInfo("닉네임", "http://15.165.92.121:8080/mypage/setting/nickname/" + userId, "newNickname", editNickname.getText().toString()));
+        buttonSaveEmail.setOnClickListener(v -> saveUserInfo("이메일", "http://15.165.92.121:8080/mypage/setting/email/" + userId, "newEmail", editEmail.getText().toString()));
+        buttonSaveEmergencyContact.setOnClickListener(v -> saveUserInfo("비상연락처", "http://15.165.92.121:8080/mypage/setting/emergencyContact/" + userId, "newContact", editEmergencyContact.getText().toString()));
 
         // 알림 설정 동작
         switchGlobalNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -84,7 +82,7 @@ public class SettingActivity extends AppCompatActivity {
     private void saveUserInfo(String type, String url, String jsonKey, String value) {
         try {
             JSONObject jsonBody = new JSONObject();
-            jsonBody.put("userId", userId); // userId를 JSON에 추가
+            jsonBody.put("id", userId);
             jsonBody.put(jsonKey, value);
 
             new Thread(() -> {

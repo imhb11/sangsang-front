@@ -23,7 +23,6 @@ public class CommunityActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://15.165.92.121:8080/mypage/community";
     private String userId;
-
     private LinearLayout writtenPostList;
     private LinearLayout likedPostList;
     private LinearLayout chatroomList;
@@ -33,38 +32,33 @@ public class CommunityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_community);
 
-        // Initialize UI components
         TextView backButton = findViewById(R.id.back_button);
         writtenPostList = findViewById(R.id.writtenPostList);
         likedPostList = findViewById(R.id.likedPostList);
         chatroomList = findViewById(R.id.chatroomList);
-        LinearLayout writtenCommentList = findViewById(R.id.writtenCommentList);
 
-        // Get JWT token
+        // JWT 토큰에서 userId 추출
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
-        if (token == null) {
+
+        if (token != null) {
+            userId = extractUserIdFromToken(token);
+        } else {
             Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Extract userId from token
-        userId = extractUserIdFromToken(token);
-
-        // Back button functionality
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(CommunityActivity.this, Mypage.class);
             startActivity(intent);
             finish();
         });
 
-        // Fetch data from backend
         fetchWrittenPosts();
         fetchLikedPosts();
         fetchChatRooms();
 
-        // Bottom Navigation Bar functionality
         findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(this, Check.class)));
         findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
         findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(this, Chat.class)));

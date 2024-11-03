@@ -13,11 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auth0.android.jwt.JWT;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -85,19 +82,9 @@ public class Mypage extends AppCompatActivity {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             try {
-                URL url = new URL("http://15.165.92.121:8080/mypage/updateFromId");
+                URL url = new URL("http://15.165.92.121:8080/mypage/updateFromId?id=" + id);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                connection.setDoOutput(true);
-
-                JSONObject jsonBody = new JSONObject();
-                jsonBody.put("id", id);
-
-                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                writer.write(jsonBody.toString());
-                writer.flush();
-                writer.close();
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -133,8 +120,8 @@ public class Mypage extends AppCompatActivity {
                     }
                     reader.close();
 
-                    JSONObject jsonObject = new JSONObject(result.toString());
-                    String nickname = jsonObject.getString("nickname");
+                    // 서버 응답이 nickname 값 자체인 경우
+                    String nickname = result.toString();
 
                     mainHandler.post(() -> nicknameTextView.setText(nickname));
                 } else {
@@ -166,10 +153,9 @@ public class Mypage extends AppCompatActivity {
                     }
                     reader.close();
 
-                    JSONObject jsonObject = new JSONObject(result.toString());
-                    int points = jsonObject.getInt("points");
-
-                    mainHandler.post(() -> pointsTextView.setText("보유 포인트: " + points + " P"));
+                    // 서버 응답이 points 값 자체인 경우
+                    String pointsText = result.toString();
+                    mainHandler.post(() -> pointsTextView.setText("보유 포인트: " + pointsText + " P"));
                 } else {
                     Log.e("PointsAPI", "Failed to fetch points: " + responseCode);
                 }
@@ -178,4 +164,5 @@ public class Mypage extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -32,33 +32,29 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
-        // Initialize UI components
         TextView backButton = findViewById(R.id.back_button);
         groupList = findViewById(R.id.group_list_container);
 
-        // Get JWT token
+        // JWT 토큰에서 userId 추출
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("jwtToken", null);
-        if (token == null) {
+
+        if (token != null) {
+            userId = extractUserIdFromToken(token);
+        } else {
             Toast.makeText(this, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Extract userId from token
-        userId = extractUserIdFromToken(token);
-
-        // Back button functionality
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(GroupActivity.this, Mypage.class);
             startActivity(intent);
             finish();
         });
 
-        // Fetch group data from backend
         fetchGroupData();
 
-        // Bottom Navigation Bar functionality
         findViewById(R.id.check).setOnClickListener(v -> startActivity(new Intent(this, Check.class)));
         findViewById(R.id.home).setOnClickListener(v -> startActivity(new Intent(this, MainActivity.class)));
         findViewById(R.id.chat).setOnClickListener(v -> startActivity(new Intent(this, Chat.class)));
@@ -93,19 +89,14 @@ public class GroupActivity extends AppCompatActivity {
                 String groupName = group.getString("title");
                 String groupDescription = group.getString("content");
 
-                // Display each group item
                 TextView groupItemView = new TextView(this);
                 groupItemView.setText(groupName + "\n" + groupDescription);
                 groupItemView.setTextSize(16);
                 groupItemView.setPadding(16, 16, 16, 16);
                 groupList.addView(groupItemView);
 
-                // Add click listener for group actions (leave, update, delete)
                 int meetingId = group.getInt("meetingId");
-                groupItemView.setOnClickListener(v -> {
-                    // Example action, replace with actual UI for options
-                    leaveGroup(meetingId);
-                });
+                groupItemView.setOnClickListener(v -> leaveGroup(meetingId));
             }
         } catch (JSONException e) {
             Log.e("GroupActivity", "Error displaying group data", e);
@@ -113,7 +104,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void leaveGroup(int meetingId) {
-        String url = BASE_URL + "/leave/" + meetingId + "?memberId=" + userId;
+        String url = BASE_URL + "/leave/" + meetingId + "?id=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
@@ -124,7 +115,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void updateGroup(int meetingId, String newTitle, String newContent, double latitude, double longitude, int maxMembers) {
-        String url = BASE_URL + "/update/" + meetingId + "?memberId=" + userId;
+        String url = BASE_URL + "/update/" + meetingId + "?id=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JSONObject jsonBody = new JSONObject();
@@ -146,7 +137,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void deleteGroup(int meetingId) {
-        String url = BASE_URL + "/delete/" + meetingId + "?memberId=" + userId;
+        String url = BASE_URL + "/delete/" + meetingId + "?id=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
