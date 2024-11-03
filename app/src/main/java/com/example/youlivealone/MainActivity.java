@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -197,29 +198,39 @@ public class MainActivity extends AppCompatActivity {
 
     // 추가된 메서드: 감정 데이터를 불러와 주간 달력에 적용
     private void applyMoodDecorators(MaterialCalendarView calendarView) {
-        SharedPreferences sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         Map<String, ?> moodEntries = sharedPreferences.getAll();
 
         for (Map.Entry<String, ?> entry : moodEntries.entrySet()) {
-            String[] dateParts = entry.getKey().split("_");
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
+            String key = entry.getKey();
+            String[] dateParts = key.split("_");
 
-            CalendarDay date = CalendarDay.from(year, month, day);
-            String mood = (String) entry.getValue();
-            calendarView.addDecorator(new MoodDecorator(date, mood));
+            if (dateParts.length == 3) { // 날짜 형식의 키만 처리
+                try {
+                    int year = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int day = Integer.parseInt(dateParts[2]);
+                    CalendarDay date = CalendarDay.from(year, month, day);
+                    int moodImageRes = sharedPreferences.getInt(key + "_moodImageRes", 0);
+
+                    if (moodImageRes != 0) {
+                        calendarView.addDecorator(new MoodDecorator(date, moodImageRes));
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e("MainActivity", "잘못된 날짜 형식 키: " + key);
+                }
+            }
         }
     }
 
     // MoodDecorator 클래스 정의
     private class MoodDecorator implements DayViewDecorator {
         private final CalendarDay date;
-        private final String mood;
+        private final int moodImageRes;
 
-        public MoodDecorator(CalendarDay date, String mood) {
+        public MoodDecorator(CalendarDay date, int moodImageRes) {
             this.date = date;
-            this.mood = mood;
+            this.moodImageRes = moodImageRes;
         }
 
         @Override
@@ -229,14 +240,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void decorate(DayViewFacade view) {
-            int drawableId = getDrawableForMood(mood);
-            if (drawableId != 0) {
-                Drawable drawable = ContextCompat.getDrawable(MainActivity.this, drawableId);
-                view.setBackgroundDrawable(drawable);
-            }
+            Drawable drawable = ContextCompat.getDrawable(MainActivity.this, moodImageRes);
+            view.setBackgroundDrawable(drawable);
         }
+    }
 
-        private int getDrawableForMood(String mood) {
+
+    private int getDrawableForMood(String mood) {
             switch (mood) {
                 case "😀 행복":
                     return R.drawable.happy;
@@ -251,4 +261,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-}
+
