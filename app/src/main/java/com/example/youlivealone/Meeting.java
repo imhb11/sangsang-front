@@ -1,6 +1,7 @@
 package com.example.youlivealone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,9 @@ public class Meeting extends AppCompatActivity implements OnMapReadyCallback {
     private NaverMap mnavermap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource; //위치 반환 구현체
+    private static final String PREFS_NAME = "UserPrefs"; // SharedPreferences 파일 이름
+    private static final String KEY_CATEGORY_ID = "categoryId"; // 저장할 키
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +68,54 @@ public class Meeting extends AppCompatActivity implements OnMapReadyCallback {
             Intent intent = new Intent(Meeting.this, Mypage.class);
             startActivity(intent);
         });
+        findViewById(R.id.fullscreen_map).setOnClickListener(v -> {
+            Intent intent = new Intent(Meeting.this, Map.class);
+            startActivity(intent);
+        });
+        findViewById(R.id.meeting_back1).setOnClickListener(v -> {
+            Intent intent = new Intent(Meeting.this, MainActivity.class);
+            startActivity(intent);
+        });
+
 
         //카테고리 버튼 클릭 시
-        GridLayout gatheringCategoryLayout = findViewById(R.id.gathering_category);
-        for (int i = 0; i < gatheringCategoryLayout.getChildCount(); i++) {
-            View child = gatheringCategoryLayout.getChildAt(i);
+        GridLayout categorygridLayout = findViewById(R.id.gathering_category);
+        for (int i = 0; i < categorygridLayout.getChildCount(); i++) {
+            View child = categorygridLayout.getChildAt(i);
             if (child instanceof ImageButton) {
                 child.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        // 각 버튼에 맞는 카테고리 ID를 지정
+                        int categoryId = -1;
+                        if (v.getId() == R.id.imageButton2) {
+                            categoryId = 1; // 운동
+                        } else if (v.getId() == R.id.imageButton3) {
+                            categoryId = 2; // 친목
+                        } else if (v.getId() == R.id.imageButton4) {
+                            categoryId = 3; // 동창회
+                        } else if (v.getId() == R.id.imageButton6) {
+                            categoryId = 4; // 음식
+                        } else if (v.getId() == R.id.imageButton5) {
+                            categoryId = 5; // 스터디
+                        } else if (v.getId() == R.id.imageButton7) {
+                            categoryId = 6; // 문화
+                        }
+
+
+                        // 카테고리 ID를 SharedPreferences에 저장
+                        // 카테고리 ID가 유효한 경우에만 저장
+                        if (categoryId != -1) {
+                            editor.putInt(KEY_CATEGORY_ID, categoryId);
+                            editor.apply();
+                        }
+
                         Intent intent = new Intent(Meeting.this, Meeting_category.class);
                         // 각 버튼에 맞는 데이터를 인텐트에 추가
-                        intent.putExtra("buttonId", v.getId());
+                        intent.putExtra("buttonId", categoryId);
                         startActivity(intent);
                     }
                 });
