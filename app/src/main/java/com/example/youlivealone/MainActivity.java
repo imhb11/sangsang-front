@@ -5,7 +5,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
@@ -17,10 +19,16 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.youlivealone.databinding.ActivityMainBinding;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final int TIME_INTERVAL = 1500; // 뒤로가기 버튼을 누른 시간 간격 (1.5초)
@@ -45,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
         // 이미지 슬라이드 코드
         ViewPager2 viewPager2 = mBinding.viewPager;
         List<Integer> images = Arrays.asList(
-                R.drawable.image1,
-                R.drawable.image2,
-                R.drawable.image3,
-                R.drawable.image4
+                R.drawable.a,
+                R.drawable.a2,
+                R.drawable.a3,
+                R.drawable.a4
         );
         ImageAdapter adapter = new ImageAdapter(images, viewPager2);
         viewPager2.setAdapter(adapter);
@@ -62,8 +70,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 버튼 작동 코드들
+        // 주간 달력 설정 및 감정 데코레이터 적용
+        MaterialCalendarView weeklyCalendar = findViewById(R.id.weeklyCalendar);
+        applyMoodDecorators(weeklyCalendar);
 
+        // 주간 보기 설정
+        weeklyCalendar.state().edit()
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                .commit();
+
+        // 주간 달력 클릭 시 Check 화면으로 이동
+        weeklyCalendar.setOnDateChangedListener((widget, date, selected) -> {
+            Intent intent = new Intent(MainActivity.this, Check.class);
+            startActivity(intent);
+        });
+
+        // 버튼 작동 코드들
         mBinding.notice.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Notice.class);
             startActivity(intent);
@@ -88,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Smart.class);
             startActivity(intent);
         });
-
 
         mBinding.check.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Check.class);
@@ -121,10 +142,8 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 권한이 허용됨
                 Toast.makeText(this, "알림 권한이 허용되었습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                // 권한이 거부됨
                 Toast.makeText(this, "알림 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -175,5 +194,61 @@ public class MainActivity extends AppCompatActivity {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
     }
-}
 
+    // 추가된 메서드: 감정 데이터를 불러와 주간 달력에 적용
+    private void applyMoodDecorators(MaterialCalendarView calendarView) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MoodPreferences", MODE_PRIVATE);
+        Map<String, ?> moodEntries = sharedPreferences.getAll();
+
+        for (Map.Entry<String, ?> entry : moodEntries.entrySet()) {
+            String[] dateParts = entry.getKey().split("_");
+            int year = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]);
+            int day = Integer.parseInt(dateParts[2]);
+
+            CalendarDay date = CalendarDay.from(year, month, day);
+            String mood = (String) entry.getValue();
+            calendarView.addDecorator(new MoodDecorator(date, mood));
+        }
+    }
+
+    // MoodDecorator 클래스 정의
+    private class MoodDecorator implements DayViewDecorator {
+        private final CalendarDay date;
+        private final String mood;
+
+        public MoodDecorator(CalendarDay date, String mood) {
+            this.date = date;
+            this.mood = mood;
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return day.equals(date);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            int drawableId = getDrawableForMood(mood);
+            if (drawableId != 0) {
+                Drawable drawable = ContextCompat.getDrawable(MainActivity.this, drawableId);
+                view.setBackgroundDrawable(drawable);
+            }
+        }
+
+        private int getDrawableForMood(String mood) {
+            switch (mood) {
+                case "😀 행복":
+                    return R.drawable.happy;
+                case "😐 보통":
+                    return R.drawable.just;
+                case "😢 슬픔":
+                    return R.drawable.sad;
+                case "😠 화남":
+                    return R.drawable.angry;
+                default:
+                    return 0;
+            }
+        }
+    }
+}

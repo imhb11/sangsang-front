@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class community_category extends AppCompatActivity {
+    //채팅
+    private RecyclerView popularChatRoomsRecyclerView; // 수평 스크롤을 위한 RecyclerView
+    private ChatRoomAdapter chatRoomAdapter; // 채팅방 어댑터
+    private ArrayList<ChatRoom> chatRooms = new ArrayList<>(); // 채팅방 목록 데이터
+
+    private static final String CHAT_ROOMS_URL_BASE = "http://15.165.92.121:8080/chat/rooms";    //
+
 
     private ListView hotlist;
     private ListView postlist;
@@ -35,9 +45,9 @@ public class community_category extends AppCompatActivity {
     private List<Post> hotPosts = new ArrayList<>();
     private List<Post> postItems = new ArrayList<>();
 
-
     private static final String HOT_POSTS_URL = "http://15.165.92.121:8080/categories/{categoryId}/posts";
     private static final String POSTS_URL = "http://15.165.92.121:8080/categories/{categoryId}/posts";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,17 @@ public class community_category extends AppCompatActivity {
         hotlist.setAdapter(hotAdapter);
         postlist.setAdapter(postAdapter);
 
+
+        // 채팅 RecyclerView 설정
+        popularChatRoomsRecyclerView = findViewById(R.id.popularChatRoomsRecyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        popularChatRoomsRecyclerView.setLayoutManager(layoutManager);
+
+        // 채팅 RecyclerView 어댑터 설정
+        chatRoomAdapter = new ChatRoomAdapter(chatRooms, this);
+        popularChatRoomsRecyclerView.setAdapter(chatRoomAdapter);
+
+
         // SharedPreferences에서 카테고리 ID 가져오기
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         int categoryId = sharedPreferences.getInt("categoryId", -1); // 기본값 -1
@@ -68,6 +89,9 @@ public class community_category extends AppCompatActivity {
             // API 호출하여 데이터 가져오기
             loadHotPosts(hotPostsUrl);
             loadPostList(postsUrl);
+
+            loadChatRooms(categoryId); // 채팅방 목록 불러오기
+
         } else {
             Toast.makeText(this, "카테고리 ID를 찾을 수 없습니다", Toast.LENGTH_SHORT).show();
             // 필요 시 액티비티 종료 또는 기본 화면 처리
@@ -166,6 +190,12 @@ public class community_category extends AppCompatActivity {
         });
 
         //버튼 작동코드들
+        //버튼 클릭시
+        TextView liveTalkButton = findViewById(R.id.textView14);
+        liveTalkButton.setOnClickListener(v -> {
+            Intent intent = new Intent(community_category.this, RealtimeChatActivity.class);
+            startActivity(intent);
+        });
 
         findViewById(R.id.check).setOnClickListener(v -> {
             Intent intent = new Intent(community_category.this, Check.class);
@@ -202,12 +232,11 @@ public class community_category extends AppCompatActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
-//                                String postId = post.getString("postId"); // postId 가져오기
-
+                                String postId = post.getString("id"); // postId 가져오기
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
-                                hotPosts.add(new Post(id, title, content));
+                                hotPosts.add(new Post(postId, id, title, content));
                             }
 
                             hotAdapter.notifyDataSetChanged();
@@ -241,12 +270,11 @@ public class community_category extends AppCompatActivity {
                         try {
                             for (int i = 0; i < response.length(); i++) {
                                 JSONObject post = response.getJSONObject(i);
-//                                String postId = post.getString("postId"); // postId 가져오기
-
+                                String postId = post.getString("id"); // postId 가져오기
                                 int id = post.getInt("categoryId");
                                 String title = post.getString("title");
                                 String content = post.getString("content");
-                                postItems.add(new Post(id, title, content));
+                                postItems.add(new Post(postId, id, title, content));
                             }
 
                             postAdapter.notifyDataSetChanged();
@@ -266,6 +294,54 @@ public class community_category extends AppCompatActivity {
         queue.add(jsonArrayRequest);
     }
 
+    // 채팅방 목록을 서버에서 불러오는 메서드
+    private void loadChatRooms(int categoryId) {
+        String url = CHAT_ROOMS_URL_BASE + "?categoryId=" + categoryId;  // GET 요청 URL 생성
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                response -> {
+                    Log.d("Response", response.toString());
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject roomObject = response.getJSONObject(i);
+
+                            int id = roomObject.getInt("id"); // 서버 응답에서 id 받아옴
+                            String name = roomObject.getString("name");
+                            String description = roomObject.getString("description");
+                            int maxParticipants = roomObject.getInt("maxParticipants");
+                            //int category = roomObject.getInt("category");
+                            int participantCount = roomObject.getInt("participantCount");
+                            //String craetorId = roomObject.getString("creatorId");
+                            // category가 JSONObject로 들어올 때 안전하게 접근
+                           // int categoryId = -1; // 기본값 설정
+//                            if (roomObject.has("category")) {
+//                                JSONObject categoryObject = roomObject.getJSONObject("category");
+//                                categoryId = categoryObject.getInt("id"); // category의 id를 추출
+//                            }
+
+                            ChatRoom chatRoom = new ChatRoom(id, name, description, maxParticipants, categoryId);
+                            chatRoom.setParticipantCount(participantCount);
+
+                            chatRooms.add(chatRoom);
+                        }
+                        chatRoomAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Log.e("community_category", "Error loading chat rooms: " + error.networkResponse.statusCode);
+                    Log.e("community_category", "Error details: " + new String(error.networkResponse.data));
+                    Toast.makeText(community_category.this, "Error loading chat rooms", Toast.LENGTH_SHORT).show();
+                }
+        );
+
+        queue.add(jsonArrayRequest);
+    }
 
 
 

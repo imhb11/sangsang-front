@@ -3,24 +3,22 @@ package com.example.youlivealone;
 import java.io.Serializable;
 
 public class Post implements Serializable {
-    //private String community_postid;
-
+    private String community_postid;
     private int userid;
     private String title;
     private String content;
 
-    public Post( int userId, String title, String content) {
-//        this.community_postid=id;
+    public Post( String id, int userId, String title, String content) {
+        this.community_postid=id;
         this.userid = userId;
         this.title = title;
         this.content = content;
     }
 
     // Getters
-//    public String getId() {
-//        return community_postid;
-//    }
-
+    public String getId() {
+        return community_postid;
+    }
     public int getUserId() {
         return userid;
     }

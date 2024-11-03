@@ -24,7 +24,7 @@ import org.json.JSONObject;
 public class GroupActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://15.165.92.121:8080/mypage/meetings";
-    private String memberId;
+    private String userId;
     private LinearLayout groupList;
 
     @Override
@@ -45,8 +45,8 @@ public class GroupActivity extends AppCompatActivity {
             return;
         }
 
-        // Extract memberId from token
-        memberId = extractMemberIdFromToken(token);
+        // Extract userId from token
+        userId = extractUserIdFromToken(token);
 
         // Back button functionality
         backButton.setOnClickListener(v -> {
@@ -65,18 +65,18 @@ public class GroupActivity extends AppCompatActivity {
         findViewById(R.id.mypage).setOnClickListener(v -> startActivity(new Intent(this, Mypage.class)));
     }
 
-    private String extractMemberIdFromToken(String token) {
+    private String extractUserIdFromToken(String token) {
         try {
             JSONObject jsonObject = new JSONObject(new String(android.util.Base64.decode(token.split("\\.")[1], android.util.Base64.DEFAULT)));
             return jsonObject.getString("sub");
         } catch (Exception e) {
-            Log.e("GroupActivity", "Error extracting memberId", e);
+            Log.e("GroupActivity", "Error extracting userId", e);
             return null;
         }
     }
 
     private void fetchGroupData() {
-        String url = BASE_URL + "/" + memberId;
+        String url = BASE_URL + "/" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -113,7 +113,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void leaveGroup(int meetingId) {
-        String url = BASE_URL + "/leave/" + meetingId + "?memberId=" + memberId;
+        String url = BASE_URL + "/leave/" + meetingId + "?memberId=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
@@ -124,7 +124,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void updateGroup(int meetingId, String newTitle, String newContent, double latitude, double longitude, int maxMembers) {
-        String url = BASE_URL + "/update/" + meetingId + "?memberId=" + memberId;
+        String url = BASE_URL + "/update/" + meetingId + "?memberId=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JSONObject jsonBody = new JSONObject();
@@ -146,7 +146,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void deleteGroup(int meetingId) {
-        String url = BASE_URL + "/delete/" + meetingId + "?memberId=" + memberId;
+        String url = BASE_URL + "/delete/" + meetingId + "?memberId=" + userId;
         RequestQueue queue = Volley.newRequestQueue(this);
 
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
